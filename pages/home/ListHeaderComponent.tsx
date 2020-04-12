@@ -2,7 +2,7 @@ import React from 'react';
 import {View, Text, Image, TouchableOpacity} from 'react-native';
 
 const ListHeaderComponent = (props: any) => {
-  console.log(props);
+  // console.log(props);
 
   return (
     <View

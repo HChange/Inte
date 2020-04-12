@@ -81,10 +81,10 @@ const Home: React.FC<any> = props => {
                     <Carousel
                       dots={false}
                       afterChange={(current) => {
-                        console.log(current);
+                        // console.log(current);
                       }}>
                       {[...Array(4).keys()].map((item, index) => {
-                        console.log('change-loadinf');
+                        // console.log('change-loadinf');
 
                         return (
                           <View
