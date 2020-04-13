@@ -25,6 +25,9 @@ import open from './open.png'
 import copen from './copen.png'
 import close from './close.png'
 import trans from './trans.png'
+
+/**register */
+import registerUser from './registerUser.png'
 const iconMap = {
   home,
   homes,
@@ -53,6 +56,8 @@ const iconMap = {
   open,
   copen,
   close,
-  trans
+  trans,
+
+  registerUser
 };
 export default iconMap;
