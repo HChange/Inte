@@ -6,16 +6,17 @@ export default StyleSheet.create({
     // backgroundColor: 'red',
     justifyContent: 'center',
     backgroundColor: '#f0f0f0',
+    alignItems:'center'
   },
   logo: {
-    height: 58,
-    marginLeft: -15,
-    marginBottom: 32,
+    width: 150,
+    height: 100,
+    marginBottom: 17,
+    // backgroundColor: 'red'
   },
   input: {
     width: Dimensions.get('window').width - 50,
     marginTop: 15,
-    marginLeft: 25,
     height: 49,
     borderRadius: 4,
     borderColor: '#ccc',
@@ -25,7 +26,6 @@ export default StyleSheet.create({
   },
   button: {
     marginTop: 15,
-    marginLeft: 25,
     width: 310,
   },
   retrieve: {
@@ -55,7 +55,7 @@ export default StyleSheet.create({
     height: 1,
     marginTop: 40,
     marginBottom: 40,
-    marginLeft: 25,
+    // marginLeft: 25,
     backgroundColor: '#888',
     position: 'relative',
   },

@@ -6,8 +6,15 @@ export default StyleSheet.create({
     alignItems: 'center',
     paddingLeft: 27,
     paddingRight: 27,
+    width:'100%',
+    height:'100%'
   },
-  headImage: {width: 150, height: 150, marginTop: 123},
+  headImage: {
+    width: 150,
+    height: 100,
+    marginTop: 127,
+    // backgroundColor: 'red',
+  },
 
   splitLine: {
     width: '100%',
@@ -60,6 +67,11 @@ export default StyleSheet.create({
     borderStyle: 'solid',
     bottom: 0,
     backgroundColor: '#f0f0f0',
+    
+  },
+  hiddenBottom:{
+    // display:'flex'
+    display:'none'
   },
   btLeft: {
     color: '#c1c1c1',
