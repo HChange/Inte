@@ -1,10 +1,9 @@
 import React, { useEffect, useCallback, useRef, useState } from 'react'
-import {View, Text, Image, TextInput, TouchableOpacity} from 'react-native';
+import {View, Text, Image, TextInput, TouchableOpacity,Keyboard} from 'react-native';
 import iconMap from '../../assets'
 import styles from './style'
 import { Button } from '@ant-design/react-native';
 import {NavigationProp} from '@react-navigation/native';
-import {Keyboard} from 'react-native'
 type Props = {
   navigation: NavigationProp<any>;
 };
@@ -33,11 +32,7 @@ const Register = (props:Props) => {
     return (
       <View style={{flex: 1}}>
         <View style={styles.registerWrap}>
-          <Image
-            style={styles.headImage}
-            resizeMode="contain"
-            source={iconMap.inte}
-          />
+        <Text style={styles.vcText}>输入手机号</Text>
           <View style={styles.splitLine}>
             {/* <View > */}
             <Text style={styles.title}>手机号</Text>
@@ -47,7 +42,7 @@ const Register = (props:Props) => {
           <Text style={styles.desc}>
             你可以接收来自Inte的短信验证，请注意查收。
           </Text>
-          <Button style={styles.button} type="primary" onPress={() => {}}>
+          <Button disabled={false} style={styles.button} type="primary" onPress={() => {props.navigation.navigate('verifyCode')}}>
             继续
           </Button>
         </View>

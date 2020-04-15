@@ -45,7 +45,7 @@ export default StyleSheet.create({
   },
   buttonText: {
     fontWeight: 'bold',
-    color: '#333',
+    color: '#214f7c',
   },
   marginLeft5: {
     marginLeft: 5,

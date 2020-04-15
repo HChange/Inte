@@ -42,7 +42,7 @@ const Login = (props:Props) => {
     isLogin();
   }, []);
   const isLogin = useCallback(() => {
-    // dispatch({type:"login",value:true});
+    dispatch({type:"login",value:true});
   }, []);
   return (
     <View style={styles.loginWrap}>

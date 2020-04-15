@@ -1,8 +1,12 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useCallback} from 'react';
 import {Image, View, Text, StatusBar} from 'react-native';
 import Login from './pages/login/Login';
 import Register from './pages/register/Register';
+import VerifyCode from './pages/register/VerifyCode';
+import InputNamePassword from './pages/register/InputNamePassword';
 import Forget from './pages/forget/Forget';
+import ForgetVerifyCode from './pages/forget/ForgetVerifyCode';
+import InputNewPassword from './pages/forget/InputNewPassword';
 
 //转载导航的容器
 import {NavigationContainer} from '@react-navigation/native';
@@ -13,19 +17,30 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {useDispatch, useSelector} from 'react-redux';
 import Camera from './pages/common/camera/Camera';
 import tabBarConfig from './config/tabBarConfig';
+import { Button } from '@ant-design/react-native';
+
 
 const BottomTabs = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
+
 const Set = function () {
+  const dispatch = useDispatch();
+  const logoutAction = useCallback(
+    () => {
+      dispatch({type:"logout",value:false})
+    },
+    [dispatch],
+  )
+
   return (
     <View>
       <Text>setting</Text>
+      <Button type="primary" onPress={logoutAction}>退出登录</Button>
     </View>
   );
 };
 function Navigator() {
-  // const dispatch = useDispatch();
   const isLogin = useSelector((state: any) => state.loginStatus.loginStatus);
   console.log(isLogin);
 
@@ -134,7 +149,11 @@ function Navigator() {
                     >
                     <Stack.Screen name="login" component={Login} />
                     <Stack.Screen name="register" component={Register} />
+                    <Stack.Screen name="verifyCode" component={VerifyCode} />
+                    <Stack.Screen name="inputNamePassword" component={InputNamePassword} />
                     <Stack.Screen name="forget" component={Forget} />
+                    <Stack.Screen name="inputNewPassword" component={InputNewPassword} />
+                    <Stack.Screen name="forgetVerifyCode" component={ForgetVerifyCode} />
                   </Stack.Navigator>
                 )}
               </Stack.Screen>
