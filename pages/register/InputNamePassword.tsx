@@ -8,6 +8,8 @@ type Props = {
   navigation: NavigationProp<any>;
 };
 const InputNamePassword = (props: Props) => {
+  const [disabled, setDisabled] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
   return (
     <View style={{flex: 1}}>
       <View style={styles.registerWrap}>
@@ -23,7 +25,9 @@ const InputNamePassword = (props: Props) => {
         <Text style={styles.tips}>
           Tips: 密码长度为8位至16位，空格和换行符会被过滤掉哦。
         </Text>
-        <Button style={styles.button}  type="primary" onPress={() => {props.navigation.navigate("login")}}>
+        <Button style={styles.button} disabled={disabled}
+            type="primary"
+            loading={loading} onPress={() => {props.navigation.navigate("login")}}>
           继续
         </Button>
         </View>
