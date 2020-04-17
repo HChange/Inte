@@ -32,6 +32,8 @@ const Login = (props: Props) => {
   useEffect(() => {
     if(telephone&&telephone.length===11&&password&&password.length>=8&&password.length<16){
       setDisabled(false)
+    }else{
+      setDisabled(true)
     }
   }, [telephone,password])
   const loginAction = useCallback(async () => {
