@@ -1,5 +1,7 @@
 import React, {useEffect, useCallback} from 'react';
 import {Image, View, Text, StatusBar} from 'react-native';
+import { Button } from '@ant-design/react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import Login from './pages/login/Login';
 import Register from './pages/register/Register';
 import VerifyCode from './pages/register/VerifyCode';
@@ -17,7 +19,6 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {useDispatch, useSelector} from 'react-redux';
 import Camera from './pages/common/camera/Camera';
 import tabBarConfig from './config/tabBarConfig';
-import { Button } from '@ant-design/react-native';
 
 
 const BottomTabs = createBottomTabNavigator();
@@ -27,12 +28,28 @@ const Stack = createStackNavigator();
 const Set = function () {
   const dispatch = useDispatch();
   const logoutAction = useCallback(
-    () => {
-      dispatch({type:"logout",value:false})
+    async () => {
+      
+      let response = await fetch(
+        'http://www.hellochange.cn:8088/api/users/logout',
+        {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+         
+        },
+      );
+      let result = await response.json();
+
+      if(result&&result.code===0){
+        await AsyncStorage.setItem('LOGINSTATUS','false')
+        dispatch({type:"logout",value:false})
+      }
     },
     [dispatch],
   )
-
   return (
     <View>
       <Text>setting</Text>
@@ -41,9 +58,45 @@ const Set = function () {
   );
 };
 function Navigator() {
-  const isLogin = useSelector((state: any) => state.loginStatus.loginStatus);
-  console.log(isLogin);
+  useEffect(() => {
+    checkLogin();
+  }, [])
+  const dispatch = useDispatch();
+  const checkLogin = async () => {
+    try {
+      const value = await AsyncStorage.getItem('LOGINSTATUS')
 
+      if(value === 'true') {
+        dispatch({type:"login",value:true})
+      }else{
+        let response = await fetch(
+          'http://www.hellochange.cn:8088/api/users/check_login',
+          {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+           
+          },
+        );
+        let result = await response.json();
+        console.log(result);
+        
+        if(result&&result.code===0){
+          await AsyncStorage.setItem('LOGINSTATUS','true')
+          dispatch({type:"login",value:true})
+        }else{
+          dispatch({type:"logout",value:false})
+        }
+      }
+    } catch(e) {console.log(e);
+    
+      
+    }
+  }
+  const isLogin = useSelector((state: any) => state.loginStatus.loginStatus);
+  const userInfo = useSelector((state:any)=>state.user.userInfo)
   return (
     <>
       <StatusBar backgroundColor="#f0f0f0" barStyle="dark-content" />

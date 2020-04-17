@@ -6,6 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
   Keyboard,
+  StatusBar,
 } from 'react-native';
 import styles from './style';
 import {Button} from '@ant-design/react-native';
@@ -21,8 +22,13 @@ const VerifyCode = (props: Props) => {
     false,
   );
   const [disabled, setDisabled] = useState<boolean>(true);
+  const [reSendDisabled, setReSendDisabled] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [code, setCode] = useState<string>();
+
+  useEffect(() => {
+    StatusBar.setBarStyle('dark-content');
+  })
   const keyboardDidShowAction = useCallback(() => {
     setBottomVisibleToggle(true);
   }, []);
@@ -66,23 +72,22 @@ const VerifyCode = (props: Props) => {
   const nextStep = useCallback(async () => {
     setLoading(true);
     setDisabled(true);
-
     try {
-      // let response = await fetch(
-      //   'http://www.hellochange.cn:8088/api/users/verify_code',
-      //   {
-      //     method: 'POST',
-      //     headers: {
-      //       Accept: 'application/json',
-      //       'Content-Type': 'application/json',
-      //     },
-      //     body: JSON.stringify({
-      //       code,
-      //     }),
-      //   },
-      // );
-      // let result = await response.json();
-      let result = {code:0,msg:"验证码发送成功"}
+      let response = await fetch(
+        'http://www.hellochange.cn:8088/api/users/verify_code',
+        {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            code,
+          }),
+        },
+      );
+      let result = await response.json();
+      // let result = {code:0,msg:"验证码发送成功"}
       if (result.code === 0) {
         toast.current.alertWithType('success', '成功', result.msg);
         setTimeout(() => {
@@ -105,10 +110,34 @@ const VerifyCode = (props: Props) => {
 
       toast.current.alertWithType('error', '失败', error);
     }
-  }, [props, telephone]);
+  }, [props,code]);
+
+  const reSendCode = useCallback(async () => {
+    setReSendDisabled(true)
+    try {
+      let response = await fetch(
+        'http://www.hellochange.cn:8088/api/users/send_code?telephone=' +
+        props.route.params.telephone,
+      );
+      let result = await response.json();
+      // let result = {code: 0, msg: '验证码发送成功'};
+      if (result&&result.code === 0) {
+        toast.current.alertWithType('success', '成功', result.msg);
+        setTimeout(() => {
+          setReSendDisabled(false)
+        }, 1500);
+      } else {
+        setReSendDisabled(false)
+        toast.current.alertWithType('error', '失败', result.msg);
+      }
+    } catch (error) {
+      setReSendDisabled(false)
+      toast.current.alertWithType('error', '失败', error);
+    }
+  }, [props]);
   return (
     <>
-      <DropdownAlert ref={toast} />
+      <DropdownAlert ref={toast} closeInterval={1200} onClose={()=>StatusBar.setBarStyle('dark-content')}/>
       <View style={{flex: 1}}>
         <View style={styles.registerWrap}>
           <Text style={styles.vcText}>输入验证码</Text>
@@ -138,7 +167,7 @@ const VerifyCode = (props: Props) => {
           </Button>
           <View style={styles.newReqWrap}>
             <Text style={styles.newReqLeft}>没接收到短信？</Text>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={reSendCode} disabled={reSendDisabled}>
               <Text style={styles.newReq}>请求新验证码。</Text>
             </TouchableOpacity>
           </View>

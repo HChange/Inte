@@ -1,11 +1,11 @@
 enum userType {
-  a = 'add',
-  b = 'delete',
+  SET_USERINFO = 'setUserInfo',
+  CLEAR_USERINFO = 'clearUserInfo',
 }
 
 /*初始化*/
 const initialState = {
-  value: '初始值',
+  userInfo: {},
 };
 
 /*同步事件*/
@@ -15,13 +15,18 @@ export const add = (type: userType, value: any) => ({
 });
 
 /*输出user仓库模块*/
-export default (state = initialState, action: ReturnType<typeof add>) => {
+export default (state = initialState, action: {type: any; value: any}) => {
   /*判断执行哪个方法*/
   switch (action.type) {
-    case userType.a:
+    case userType.SET_USERINFO:
       return {
         ...state,
-        value: state.value + action.value,
+        userInfo: action.value,
+      };
+    case userType.CLEAR_USERINFO:
+      return {
+        ...state,
+        userInfo: null,
       };
     default:
       return state;
