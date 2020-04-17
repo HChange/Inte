@@ -1,6 +1,6 @@
 import React, {useEffect, useCallback} from 'react';
 import {Image, View, Text, StatusBar} from 'react-native';
-import { Button } from '@ant-design/react-native';
+import { Button ,Provider} from '@ant-design/react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import Login from './pages/login/Login';
 import Register from './pages/register/Register';
@@ -9,6 +9,7 @@ import InputNamePassword from './pages/register/InputNamePassword';
 import Forget from './pages/forget/Forget';
 import ForgetVerifyCode from './pages/forget/ForgetVerifyCode';
 import InputNewPassword from './pages/forget/InputNewPassword';
+import DrawerContent from './pages/common/drawerContent'
 
 //转载导航的容器
 import {NavigationContainer} from '@react-navigation/native';
@@ -57,6 +58,7 @@ const Set = function () {
     </View>
   );
 };
+
 function Navigator() {
   useEffect(() => {
     checkLogin();
@@ -117,11 +119,12 @@ function Navigator() {
                       <Stack.Screen name="app">
                         {() => (
                           <BottomTabs.Navigator
-                            tabBarOptions={{
+                            tabBarOptions={{  
                               showLabel: false,
                               style: {
                                 backgroundColor: '#fafafa',
                               },
+                              keyboardHidesTabBar:true
                             }}>
                             {tabBarConfig.map((item) => {
                               if (item.children) {
@@ -147,11 +150,13 @@ function Navigator() {
                                       <Drawer.Navigator
                                         drawerType="back"
                                         drawerPosition="right"
+                                        drawerContent={(props)=><DrawerContent {...props}/>}
                                         drawerStyle={{
-                                          backgroundColor: '#c6cbef',
+                                          // backgroundColor: '#c6cbef',
                                           width: 242,
                                         }}>
                                         <Drawer.Screen
+                            
                                           name="set"
                                           component={Set}
                                         />
