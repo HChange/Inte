@@ -16,6 +16,8 @@ import imageMap from '../../assets/index';
 import styles from './style';
 import deleteBlankSpace from '../../common/deleteBlankSpace';
 import AsyncStorage from '@react-native-community/async-storage';
+
+import api from ".././../config/api"
 type Props = {
   navigation: NavigationProp<any>;
   route: any;
@@ -41,7 +43,7 @@ const Login = (props: Props) => {
     setDisabled(true);
     try {
       let response = await fetch(
-        'http://www.hellochange.cn:8088/api/users/login',
+        api.LOGIN,
         {
           method: 'POST',
           headers: {
@@ -97,8 +99,10 @@ const Login = (props: Props) => {
 
   const isLogin = useCallback((result) => {
     dispatch({type: 'login', value: true});
-    dispatch({type: 'setUserInfo', value: result});
-    storeData(result);
+    dispatch({type: 'setUserInfo', value: result.data.data});
+    console.log(result);
+    
+    storeData(result.data.data);
   }, []);
 
   // 本地缓存登录信息
@@ -115,7 +119,7 @@ const Login = (props: Props) => {
       <DropdownAlert
         ref={toast}
         closeInterval={1200}
-        onClose={() => StatusBar.setBarStyle('dark-content')}
+        onClose={() => {StatusBar.setBarStyle('dark-content');}}
       />
 
       <View style={styles.loginWrap}>

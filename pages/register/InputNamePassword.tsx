@@ -5,6 +5,7 @@ import {Button} from '@ant-design/react-native';
 import {NavigationProp} from '@react-navigation/native';
 import DropdownAlert from 'react-native-dropdownalert';
 import deleteBlankSpace from "../../common/deleteBlankSpace"
+import api from '../../config/api'
 type Props = {
   navigation: NavigationProp<any>;
   route: any;
@@ -31,7 +32,7 @@ const InputNamePassword = (props: Props) => {
       setDisabled(true);
       try {
         let response = await fetch(
-          'http://www.hellochange.cn:8088/api/users/register',
+          api.REGISTER,
           {
             method: 'POST',
             headers: {

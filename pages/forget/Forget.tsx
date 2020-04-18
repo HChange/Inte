@@ -12,6 +12,7 @@ import styles from './style';
 import {Button} from '@ant-design/react-native';
 import {NavigationProp} from '@react-navigation/native';
 import DropdownAlert from 'react-native-dropdownalert';
+import api from '../../config/api'
 type Props = {
   navigation: NavigationProp<any>;
 };
@@ -55,7 +56,7 @@ const Forget = (props: Props) => {
     setDisabled(true);
     try {
       let response = await fetch(
-        'http://www.hellochange.cn:8088/api/users/send_code?type=forget&telephone=' +
+        api.SEND_CODE+'?type=forget&telephone=' +
           telephone,
       );
       let result = await response.json();

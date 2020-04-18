@@ -12,6 +12,8 @@ import styles from './style';
 import {Button} from '@ant-design/react-native';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import DropdownAlert from 'react-native-dropdownalert';
+import api from '../../config/api';
+
 type Props = {
   navigation: NavigationProp<any>;
   route: any;
@@ -74,7 +76,7 @@ const VerifyCode = (props: Props) => {
     setDisabled(true);
     try {
       let response = await fetch(
-        'http://www.hellochange.cn:8088/api/users/verify_code',
+        api.VERIFY_CODE,
         {
           method: 'POST',
           headers: {
