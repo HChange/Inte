@@ -13,6 +13,7 @@ import {Button} from '@ant-design/react-native';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import DropdownAlert from 'react-native-dropdownalert';
 import api from '../../config/api';
+import { DERATION } from '../../config';
 
 type Props = {
   navigation: NavigationProp<any>;
@@ -99,7 +100,7 @@ const VerifyCode = (props: Props) => {
           props.navigation.navigate('inputNamePassword', {
             telephone: props.route.params.telephone,
           });
-        }, 1500);
+        }, DERATION);
       } else {
         setLoading(false);
         setDisabled(false);

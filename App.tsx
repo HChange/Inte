@@ -5,9 +5,6 @@ import Navigator from './Navigator'
 import { StatusBar } from 'react-native';
 const store = configStore();
 const App = () => {
-
-  
- 
   return (
     <Provider store={store}>
       <StatusBar animated backgroundColor='#f0f0f0' barStyle="dark-content" />

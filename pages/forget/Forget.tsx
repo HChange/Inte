@@ -13,6 +13,7 @@ import {Button} from '@ant-design/react-native';
 import {NavigationProp} from '@react-navigation/native';
 import DropdownAlert from 'react-native-dropdownalert';
 import api from '../../config/api'
+import { DERATION } from '../../config';
 type Props = {
   navigation: NavigationProp<any>;
 };
@@ -68,7 +69,7 @@ const Forget = (props: Props) => {
           setDisabled(false);
 
           props.navigation.navigate('forgetVerifyCode', {telephone});
-        }, 1500);
+        }, DERATION);
       } else {
         setDisabled(false);
 

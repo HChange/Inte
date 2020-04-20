@@ -7,6 +7,7 @@ import DropdownAlert from 'react-native-dropdownalert';
 import deleteBlankSpace from "../../common/deleteBlankSpace"
 
 import api from '../../config/api'
+import { DERATION } from '../../config';
 type Props = {
   navigation: NavigationProp<any>;
   route: any;
@@ -53,7 +54,7 @@ const InputNamePassword = (props: Props) => {
           setDisabled(false);
 
           props.navigation.navigate('login');
-        }, 1500);
+        }, DERATION);
       } else {
         setLoading(false);
         setDisabled(false);

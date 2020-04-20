@@ -1,24 +1,19 @@
 import React, {useState} from 'react';
-import {View, Text, Image} from 'react-native';
+import {View, Text, Image,ToastAndroid} from 'react-native';
 import {Button, TextareaItem} from '@ant-design/react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import styles from './styles';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-// import Dialog, {
-//   SlideAnimation,
-//   DialogContent,
-//   DialogTitle,
-//   DialogFooter,
-//   DialogButton,
-// } from 'react-native-popup-dialog';
+import api from '../../config/api'
 import Dialog from 'react-native-dialog';
-import {log} from 'react-native-reanimated';
 const Mine: React.FC<any> = (props: any) => {
   const userInfo = useSelector((state: any) => state.user.userInfo);
-  const [sign, setSign] = useState<string>();
-  const [editVisible, setEditVisible] = useState<boolean>(true);
-  const [signTmp, setSignTmp] = useState<string>();
+  
+  const [sign, setSign] = useState<string>(userInfo&&userInfo.sign);
+  const [editVisible, setEditVisible] = useState<boolean>(false);
+  const [signTmp, setSignTmp] = useState<any>();
+  const [editFouce, setEditFouce] = useState(false)
   function formatNum(number: number | string) {
     let tmp;
     if (number >= 100000000) {
@@ -38,11 +33,12 @@ const Mine: React.FC<any> = (props: any) => {
         <TextareaItem
           rows={3}
           editable={true}
-          style={styles.signText}
+          style={[styles.signText, editFouce && {borderColor: '#3897f0'}]}
           value={sign}
           onChangeText={(value) => {
             setSign(value);
           }}
+          onFocus={() => {setEditFouce(true)}}
           count={30}
           numberOfLines={3}
           placeholder="优秀的自我介绍，可以让更多人认识你"
@@ -58,9 +54,17 @@ const Mine: React.FC<any> = (props: any) => {
         <Dialog.Button
           style={{color: '#3897f0'}}
           label="确定"
-          onPress={() => {
+          onPress={async () => {
             setEditVisible(false);
             setSignTmp(sign);
+            let response = await fetch(api.SET_SIGN+"?sign="+sign);
+            let result = await response.json();
+            if(result&&result.code===0){
+      
+              ToastAndroid.show('设置成功',500);
+            }else{
+              ToastAndroid.show('设置失败', 500);
+            }
           }}
         />
       </Dialog.Container>
@@ -134,7 +138,7 @@ const Mine: React.FC<any> = (props: any) => {
             style={styles.editButton}
             type="ghost"
             size="small"
-            onPress={() => {}}>
+            onPress={() => {props.navigation.push('editInfo');}}>
             编辑主页
           </Button>
         </View>

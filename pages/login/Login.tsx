@@ -18,6 +18,8 @@ import deleteBlankSpace from '../../common/deleteBlankSpace';
 import AsyncStorage from '@react-native-community/async-storage';
 
 import api from ".././../config/api"
+import {DERATION} from ".././../config"
+
 type Props = {
   navigation: NavigationProp<any>;
   route: any;
@@ -64,7 +66,7 @@ const Login = (props: Props) => {
           setLoading(false);
           setDisabled(false);
           isLogin(result);
-        }, 1500);
+        }, DERATION);
       } else {
         setLoading(false);
         setDisabled(false);
@@ -77,24 +79,7 @@ const Login = (props: Props) => {
 
       toast.current.alertWithType('error', '失败', error);
     }
-    //   //    Alert.alert("登录成功！");
-    //   Alert.alert(
-    //     '找不到账号',
-    //     '找不到对应的账号。请试一试其他手机号或者用户名；如果没有Inte账号，你可以注册一个。',
-    //     [
-    //       {
-    //         text: '再试试呗',
-    //       //   onPress: () => console.log('Ask me later pressed'),
-    //       },
-    //       {
-    //         text: '注册',
-    //         onPress: () => props.navigation.navigate('register'),
-    //         style: 'destructive',
-    //       },
-    //     ],
-    //     {cancelable: false},
-    //   );
-    //   Toast.loading('账号或密码错误！');
+
   }, [telephone,password,props]);
 
   const isLogin = useCallback((result) => {

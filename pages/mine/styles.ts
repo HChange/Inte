@@ -59,11 +59,12 @@ export default StyleSheet.create({
     backgroundColor: '#f7f7f7',
     flexWrap: 'wrap',
     borderStyle: 'solid',
-    // borderRadius: 5,
-    borderColor: '#3897f0',
+    borderRadius: 3,
+    borderColor: '#f0f0f0',
     borderWidth: 1,
     padding: 13,
     fontSize: 16,
+    maxWidth: 270
   },
   signTextView: {
     width: '100%',
@@ -75,7 +76,7 @@ export default StyleSheet.create({
     borderWidth: 1,
     padding: 13,
     fontSize: 16,
-    color: '#214f7c',
+    color: '#666',
   },
   editButton: {
     marginLeft: 18,

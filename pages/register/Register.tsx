@@ -14,6 +14,7 @@ import {NavigationProp} from '@react-navigation/native';
 import DropdownAlert from 'react-native-dropdownalert';
 
 import api from '../../config/api'
+import { DERATION } from '../../config';
 type Props = {
   navigation: NavigationProp<any>;
 };
@@ -69,7 +70,7 @@ const Register = (props: Props) => {
           setDisabled(false);
 
           props.navigation.navigate('verifyCode', {telephone});
-        }, 1500);
+        }, DERATION);
       } else {
         setDisabled(false);
 
@@ -86,7 +87,7 @@ const Register = (props: Props) => {
 
   return (
     <>
-      <DropdownAlert ref={toast} closeInterval={1200} onClose={()=>StatusBar.setBarStyle('dark-content')}/>
+      <DropdownAlert ref={toast} closeInterval={1200} onClose={()=>{StatusBar.setBarStyle('dark-content');StatusBar.setBackgroundColor('#f0f0f0')}}/>
       <View style={{flex: 1}}>
         <View style={styles.registerWrap}>
           <Text style={styles.vcText}>输入手机号</Text>

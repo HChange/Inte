@@ -1,4 +1,4 @@
-const ADDRESS = "http://www.hellochange.cn:8088"
+const ADDRESS = 'http://192.168.1.106:8088';
 export default {
   /**请求地址 */
   ADDRESS: ADDRESS,
@@ -15,5 +15,11 @@ export default {
   /**退出登录 */
   LOGOUT: ADDRESS + '/api/users/logout',
   /**检查登录状态 */
-  CHECK_LOGIN: ADDRESS+'/api/users/check_login'
+  CHECK_LOGIN: ADDRESS+'/api/users/check_login',
+  /**设置个性签名 */
+  SET_SIGN:ADDRESS+'/api/users/set_sign',
+  /**获得用户信息 */
+  GET_USERINFO:ADDRESS+'/api/users/get_userInfo',
+  /**设置用户信息 */
+  SET_USERINFO:ADDRESS+'/api/users/set_userInfo'
 };

@@ -9,9 +9,10 @@ import InputNamePassword from './pages/register/InputNamePassword';
 import Forget from './pages/forget/Forget';
 import ForgetVerifyCode from './pages/forget/ForgetVerifyCode';
 import InputNewPassword from './pages/forget/InputNewPassword';
-import DrawerContent from './pages/common/drawerContent'
-import Mine from './pages/mine/Mine'
-import Setting from './pages/setting/Setting'
+import DrawerContent from './pages/common/drawerContent';
+import Mine from './pages/mine/Mine';
+import Setting from './pages/setting/Setting';
+import EditInfo from './pages/editInfo/EditInfo';
 //转载导航的容器
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -24,53 +25,64 @@ import tabBarConfig from './config/tabBarConfig';
 
 import api from './config/api';
 
-
 const BottomTabs = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
 
-
-
 function Navigator() {
   useEffect(() => {
     checkLogin();
-  }, [])
-  
+  }, []);
+
   const dispatch = useDispatch();
   const checkLogin = async () => {
     try {
-      const value = await AsyncStorage.getItem('LOGINSTATUS')
-      const userInfo = await AsyncStorage.getItem('USERINFO')
-      if (value === 'trfaleue' && userInfo) {
+      const value = await AsyncStorage.getItem('LOGINSTATUS');
+      const userInfo = await AsyncStorage.getItem('USERINFO');
+      if (value === 'true' && userInfo) {
         dispatch({type: 'login', value: true});
-        dispatch({type: 'setUserInfo', value: JSON.parse(userInfo)});
+        let newUserInfo;
+        let response = await fetch(api.GET_USERINFO);
+        let res = await response.json();
+        console.log(res);
+
+        if (res && res.code === 0) {
+          newUserInfo = res.data;
+          await AsyncStorage.setItem('USERINFO', JSON.stringify(newUserInfo));
+        } else {
+          newUserInfo = JSON.parse(userInfo);
+        }
+        dispatch({type: 'setUserInfo', value: newUserInfo});
       } else {
-        console.log(1);
-        
-        let response = await fetch(
-          api.CHECK_LOGIN,
-          {
-            method: 'POST',
-            headers: {
-              Accept: 'application/json',
-              'Content-Type': 'application/json',
-            },
-          }, 
-        );
+        let response = await fetch(api.CHECK_LOGIN, {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+        });
         let result = await response.json();
         if (result && result.code === 0) {
           await AsyncStorage.setItem('LOGINSTATUS', 'true');
-          await AsyncStorage.setItem('USERINFO', JSON.stringify(result.data));
+          let userInfo;
+          let response = await fetch(api.GET_USERINFO);
+          let res = await response.json();
+          if (res && res.code === 0) {
+            userInfo = res.data;
+          } else {
+            userInfo = result.data;
+          }
+          await AsyncStorage.setItem('USERINFO', JSON.stringify(userInfo));
           dispatch({type: 'login', value: true});
-          dispatch({type: 'setUserInfo', value: result.data});
+          dispatch({type: 'setUserInfo', value: userInfo});
         } else {
           dispatch({type: 'logout', value: false});
         }
       }
-    } catch(e) {console.log(e);
-  
+    } catch (e) {
+      console.log(e);
     }
-  }
+  };
   const isLogin = useSelector((state: any) => state.loginStatus.loginStatus);
 
   return (
@@ -88,7 +100,11 @@ function Navigator() {
                 <Stack.Screen name="camera" component={Camera} />
                 <Stack.Screen name="app">
                   {() => (
-                    <Stack.Navigator mode="card" headerMode="none">
+                    <Stack.Navigator
+                      initialRouteName="app"
+                      mode="card"
+                      headerMode="none">
+                      <Stack.Screen name="editInfo" component={EditInfo} />
                       <Stack.Screen name="app">
                         {() => (
                           <BottomTabs.Navigator
@@ -107,8 +123,10 @@ function Navigator() {
                                     name={item.name}
                                     options={{
                                       tabBarIcon: ({focused}) => {
-                                        if(focused){
-                                          StatusBar.setBackgroundColor('#f0f0f0')
+                                        if (focused) {
+                                          StatusBar.setBackgroundColor(
+                                            '#f0f0f0',
+                                          );
                                         }
                                         return (
                                           <Image
