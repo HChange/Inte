@@ -4,12 +4,14 @@ import search from './search.png';
 import searchs from './searchs.png';
 import upload from './upload.png';
 import like from './like.png';
+import redLike from './redLike.png';
 import likes from './likes.png';
 import user from './user.png';
 import users from './users.png';
 import ca from './ca.png';
 import ca2 from './ca2.png';
 import coll from './coll.png';
+import colla from './colla.png';
 import down from './down.png';
 import fly from './fly.png';
 import instagram from './instagram.png';
@@ -35,6 +37,7 @@ const iconMap = {
   searchs,
   like,
   likes,
+  redLike,
   upload,
   user,
   users,
@@ -43,6 +46,7 @@ const iconMap = {
   ca,
   ca2,
   coll,
+  colla,
   down,
   fly,
   instagram,

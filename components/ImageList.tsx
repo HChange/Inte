@@ -1,10 +1,28 @@
 import React, {useState, useEffect} from 'react';
 import {View, Text, FlatList, Image} from 'react-native';
-import styles from './imageListStyle';
-const ImageList = () => {
+import DefaultListEmptyComponent from '../components/ListEmptyComponent';
+import DefaultListFooterComponent from '../components/ListFooterComponent';
+interface Props {
+  Render: React.FC<any>;
+  pageNumber: number;
+  group?: number;
+  ListEmptyComponent?: React.FC<any>;
+  ListHeaderComponent?: React.FC<any>;
+  ListFooterComponent?: React.FC<any>;
+}
+const ImageList: React.FC<Props> = (props) => {
+  const {
+    Render,
+    pageNumber,
+    group,
+    ListHeaderComponent=null,
+    ListEmptyComponent = DefaultListEmptyComponent,
+    ListFooterComponent = DefaultListFooterComponent,
+  } = props;
+
   const [imageData, setImageData] = useState<any[]>([]);
   const [pageIndex, setPageIndex] = useState<number>(1);
-  const [pageNum, setPageNum] = useState<number>(24);
+  const [pageNum, setPageNum] = useState<number>(pageNumber);
   const [canLoadMore, setCanLoadMore] = useState<boolean>(true);
   let i = 0;
   useEffect(() => {
@@ -14,12 +32,15 @@ const ImageList = () => {
       if (!newData) return;
       let formatData = [];
       let tmp = 1;
-      do {
-        formatData.push(newData.slice((tmp - 1) * 3, tmp * 3));
-        tmp += 1;
-      } while (tmp * 3 <= newData.length);
+      if (group) {
+        do {
+          formatData.push(newData.slice((tmp - 1) * group, tmp * group));
+          tmp += 1;
+        } while (tmp * group <= newData.length);
+      } else {
+        formatData = newData;
+      }
       setCanLoadMore(true);
-      console.log(formatData);
       setImageData([...imageData, ...formatData]);
     }, 2000);
   }, [pageIndex, pageNum]);
@@ -40,31 +61,20 @@ const ImageList = () => {
         data={imageData}
         onEndReachedThreshold={0.1}
         refreshing={false}
+        ListEmptyComponent={<ListEmptyComponent />}
+        ListHeaderComponent={ListHeaderComponent?<ListHeaderComponent {...props}/>:(<></>)}
+        ListFooterComponent={<ListFooterComponent />}
         onRefresh={() => {
           console.log('下拉刷新...');
         }}
         renderItem={({item}) => {
-          return (
-            <View style={styles.imageWrap}>
-              {item.map((_item: any) => {
-                return (
-                  <Image
-                    key={_item.key}
-                    source={{uri: _item.source}}
-                    style={styles.image}
-                  />
-                );
-              })}
-            </View>
-          );
+          return <Render item={item} />;
         }}
         keyExtractor={(_item) => {
-          return _item[0].key;
+          return _item[0] ? _item[0].key : _item.key;
         }}
         onEndReached={() => {
           if (canLoadMore) {
-            console.log(1);
-
             setPageIndex(pageIndex + 1);
           }
         }}

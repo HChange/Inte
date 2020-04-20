@@ -7,7 +7,8 @@ import Dialog from 'react-native-dialog';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import api from '../../config/api'
 import styles from './styles';
-import ImageList from './ImageList'
+import ImageList from '../../components/ImageList'
+import ImageGroup from './ImageGroup'
 
 const Mine: React.FC<any> = (props: any) => {
   const userInfo = useSelector((state: any) => state.user.userInfo);
@@ -145,7 +146,7 @@ const Mine: React.FC<any> = (props: any) => {
           </Button>
         </View>
         <View style={styles.imageListWrap}>
-          <ImageList/>
+          <ImageList Render={ImageGroup} pageNumber={16} group={3}/>
         </View>
       </View>
     </>

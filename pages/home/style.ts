@@ -82,4 +82,34 @@ export default StyleSheet.create({
     width: Dimensions.get('window').width,
     height: Dimensions.get('window').width,
   },
+  cardAction:{
+    flexDirection:'row',
+    justifyContent:'space-between',
+    padding: 4
+  },
+  cardIcon:{
+    width: 26,
+    height: 26,
+    margin: 6,
+
+  },
+  actionLeft:{
+    flexDirection:'row'
+  },
+  actionRight:{
+    flexDirection:'row'
+  },
+  desc:{
+    flexDirection:'row',
+    justifyContent:"flex-start"
+  },
+  descContent:{
+    fontSize: 14,
+    fontWeight: 'bold',
+    lineHeight: 30,
+    flex: 1,
+    marginLeft: 11,
+    color: '#333333',
+  }
+
 });
