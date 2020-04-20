@@ -31,6 +31,7 @@ export default StyleSheet.create({
   //card
   cardWrap: {
     width: '100%',
+    marginBottom:10
   },
   cardHeader: {
     height: 52,
@@ -82,34 +83,60 @@ export default StyleSheet.create({
     width: Dimensions.get('window').width,
     height: Dimensions.get('window').width,
   },
-  cardAction:{
-    flexDirection:'row',
-    justifyContent:'space-between',
-    padding: 4
+  cardAction: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 4,
   },
-  cardIcon:{
+  cardIcon: {
     width: 26,
     height: 26,
-    margin: 6,
-
+    marginLeft: 11,
+    marginTop: 8,
+    marginBottom: 4,
+    marginRight: 11,
   },
-  actionLeft:{
-    flexDirection:'row'
+  actionLeft: {
+    flexDirection: 'row',
   },
-  actionRight:{
-    flexDirection:'row'
+  actionRight: {
+    flexDirection: 'row',
   },
-  desc:{
-    flexDirection:'row',
-    justifyContent:"flex-start"
+  desc: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
   },
-  descContent:{
+  descContent: {
     fontSize: 14,
-    fontWeight: 'bold',
     lineHeight: 30,
     flex: 1,
     marginLeft: 11,
-    color: '#333333',
+    color: '#666',
+    marginRight: 11,
+    fontWeight:"bold"
+  },
+  replyWrap: {
+    padding: 10,
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    marginTop: -5
+  },
+  replyerIcon: {
+    height: 30,
+    width: 30,
+    borderColor: '#e0e0e0',
+    borderWidth: 1,
+    borderRadius: 15,
+  },
+  addReply:{
+    marginLeft: 6,
+    color:"#888"
+  },
+  time:{
+    fontSize:11,
+    color:"#999",
+    marginLeft:12,
+    marginTop:-4
   }
-
 });
