@@ -89,4 +89,8 @@ export default StyleSheet.create({
     //   justifyContent:'flex-end'
     alignItems: 'flex-end',
   },
+  imageListWrap:{
+    flex:1,
+    // backgroundColor:'red'
+  }
 });

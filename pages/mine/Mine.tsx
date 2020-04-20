@@ -1,12 +1,14 @@
 import React, {useState} from 'react';
-import {View, Text, Image,ToastAndroid} from 'react-native';
+import {View, Text, Image,ToastAndroid,FlatList} from 'react-native';
 import {Button, TextareaItem} from '@ant-design/react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
-import styles from './styles';
 import {useSelector, useDispatch} from 'react-redux';
+import Dialog from 'react-native-dialog';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import api from '../../config/api'
-import Dialog from 'react-native-dialog';
+import styles from './styles';
+import ImageList from './ImageList'
+
 const Mine: React.FC<any> = (props: any) => {
   const userInfo = useSelector((state: any) => state.user.userInfo);
   
@@ -142,7 +144,9 @@ const Mine: React.FC<any> = (props: any) => {
             编辑主页
           </Button>
         </View>
-        <View></View>
+        <View style={styles.imageListWrap}>
+          <ImageList/>
+        </View>
       </View>
     </>
   );
