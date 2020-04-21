@@ -1,4 +1,4 @@
-const ADDRESS = 'http://192.168.1.106:8088';
+const ADDRESS = 'http://192.168.137.35:8088';
 export default {
   /**请求地址 */
   ADDRESS: ADDRESS,

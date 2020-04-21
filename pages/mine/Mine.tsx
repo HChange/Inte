@@ -74,7 +74,7 @@ const Mine: React.FC<any> = (props: any) => {
       <View style={styles.wrap}>
         <View style={styles.header}>
           <Text style={styles.username} numberOfLines={1}>
-            {userInfo.username}
+            {userInfo&&userInfo.username}
           </Text>
           <TouchableOpacity
             onPress={() => {

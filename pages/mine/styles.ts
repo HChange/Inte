@@ -16,6 +16,7 @@ export default StyleSheet.create({
     fontWeight: 'bold',
     lineHeight: 29,
     maxWidth: 170,
+    marginLeft:12
   },
   infoCard: {
     height: 287,

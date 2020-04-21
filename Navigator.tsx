@@ -42,20 +42,33 @@ function Navigator() {
   const checkLogin = async () => {
     try {
       const value = await AsyncStorage.getItem('LOGINSTATUS');
+      console.log("value");
+      console.log(value);
+      
       const userInfo = await AsyncStorage.getItem('USERINFO');
+      console.log("test");
+      
+      console.log(userInfo);
 
       if (value === 'true' && userInfo) {
+        console.log("重新验证登录");
+        
         dispatch({type: 'login', value: true});
         dispatch({type: 'setUserInfo', value: JSON.parse(userInfo)})
         let newUserInfo;
         let response = await fetch(api.GET_USERINFO);
         let res = await response.json();
         if (res && res.code === 0) {
+          console.log("res");
+          console.log(res);
+          
           newUserInfo = res.data;
           await AsyncStorage.setItem('USERINFO', JSON.stringify(newUserInfo));
         } 
         dispatch({type: 'setUserInfo', value: newUserInfo});
       } else {
+        console.log("else");
+        
         let response = await fetch(api.CHECK_LOGIN, {
           method: 'POST',
           headers: {

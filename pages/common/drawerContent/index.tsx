@@ -20,7 +20,7 @@ const DrawerContent = (props: any) => {
   return (
     <Animated.View style={{transform: [{translateX}], flex: 1}}>
       <View style={styles.header}>
-        <Text style={styles.username} numberOfLines={1}>{userInfo.username}</Text>
+        <Text style={styles.username} numberOfLines={1}>{userInfo&&userInfo.username}</Text>
       </View>
       <View style={styles.body}>
         <DrawerContentScrollView {...props}>

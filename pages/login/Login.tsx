@@ -83,10 +83,9 @@ const Login = (props: Props) => {
   }, [telephone,password,props]);
 
   const isLogin = useCallback((result) => {
+    
     dispatch({type: 'login', value: true});
     dispatch({type: 'setUserInfo', value: result.data.data});
-    console.log(result);
-    
     storeData(result.data.data);
   }, []);
 
@@ -95,6 +94,10 @@ const Login = (props: Props) => {
     try {
       await AsyncStorage.setItem('LOGINSTATUS', "true")
       await AsyncStorage.setItem('USERINFO', JSON.stringify(userInfo))
+      console.log("userinfo");
+      
+      console.log(JSON.stringify(userInfo));
+      
     } catch (e) {
       toast.current.alertWithType('error', '系统错误', e);
     }
