@@ -12,7 +12,7 @@ const ListHeaderComponent = (props: any) => {
         borderBottomColor: '#eeeeee',
         borderBottomWidth: 1,
       }}>
-      <TouchableOpacity onPress={() => props.navigation.navigate('camera',{type:"takeRecord"})}>
+      <TouchableOpacity onPress={() => props.navigation.navigate('camera',{type:"codeRead"})}>
         <View
           style={{
             width: 56,

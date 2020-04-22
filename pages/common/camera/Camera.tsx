@@ -79,8 +79,18 @@ class Camera extends PureComponent<Props, State> {
               // }}
               // 二维码
               onBarCodeRead={(...item) => {
+                ToastAndroid.show("识别成功",1000)
                 if ((this.props.route.params.type = 'codeRead')) {
-                  Linking.openURL(item[0].data);
+                  Linking.canOpenURL(item[0].data).then((supported) => {
+                    // weixin://  alipay://
+                    if (supported) {
+                      Linking.openURL(item[0].data);
+                    } else {
+                      Linking.openURL("https://www.baidu.com/s?wd="+item[0].data)
+
+                    }
+                  });
+                  
                 }
               }}
             />
@@ -115,7 +125,7 @@ class Camera extends PureComponent<Props, State> {
                 justifyContent: 'center',
               }}>
               {
-                (this.props.route.params.type =
+                (this.props.route.params.type !==
                   'codeRead' &&
                   (this.state.isRecording ? (
                     <View
