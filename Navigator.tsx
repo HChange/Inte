@@ -14,6 +14,8 @@ import Mine from './pages/mine/Mine';
 import Setting from './pages/setting/Setting';
 import EditInfo from './pages/editInfo/EditInfo';
 import Loading from './pages/common/loading';
+import EditPost from './pages/EditPost';
+
 //转载导航的容器
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -25,6 +27,7 @@ import Camera from './pages/common/camera/Camera';
 import tabBarConfig from './config/tabBarConfig';
 
 import api from './config/api';
+
 const BottomTabs = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -116,6 +119,7 @@ function Navigator() {
               {isLogin ? (
                 <>
                   <Stack.Screen name="camera" component={Camera} />
+                  <Stack.Screen name="editPost" component={EditPost} />
                   <Stack.Screen name="app">
                     {() => (
                       <Stack.Navigator

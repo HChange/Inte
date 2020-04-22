@@ -12,7 +12,7 @@ const ListHeaderComponent = (props: any) => {
         borderBottomColor: '#eeeeee',
         borderBottomWidth: 1,
       }}>
-      <TouchableOpacity onPress={() => props.navigation.navigate('camera')}>
+      <TouchableOpacity onPress={() => props.navigation.navigate('camera',{type:"takeRecord"})}>
         <View
           style={{
             width: 56,
@@ -55,8 +55,8 @@ const ListHeaderComponent = (props: any) => {
           </View>
         </View>
 
-        <Text style={{fontSize: 12, color: '#333333', marginLeft: 13}}>
-          你的快拍
+        <Text style={{fontSize: 12, color: '#333333', marginLeft: 19}}>
+          短视频
         </Text>
       </TouchableOpacity>
     </View>

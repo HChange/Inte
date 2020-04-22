@@ -1,19 +1,13 @@
-/* eslint-disable react-native/no-inline-styles */
-
-// import Loading from '../common/Loading';
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {View, Text, Image, FlatList, TouchableOpacity} from 'react-native';
-import {Toast, Carousel} from '@ant-design/react-native';
 import icons from '../../assets/index';
 import HomeStyle from './style';
 import ListHeaderComponent from './ListHeaderComponent';
 import {SafeAreaView} from 'react-native-safe-area-context';
-// import {withNavigationFocus} from 'react-navigation';
 import ImageList from "../../components/ImageList"
 import HomeCard from "./HomeCard"
 
 const Home: React.FC<any> = props => {
-  let initdata = [...Array(10).keys()];
   // const refreshControlDOM = (
   //   <RefreshControl
   //     title="正在刷新..."
@@ -24,9 +18,6 @@ const Home: React.FC<any> = props => {
   //     size={1}
   //   />
   // );
-  let i = 10;
-  const [data, setData] = useState(initdata);
-  const [canLoadMore, setCanLoadMore] = useState(true);
 
   return (
     <SafeAreaView style={{flex: 1}}>
@@ -34,7 +25,7 @@ const Home: React.FC<any> = props => {
         <View style={HomeStyle.headerWrap}>
           <TouchableOpacity
             onPress={() => {
-              props.navigation.navigate('camera');
+              props.navigation.navigate('camera',{type:'takePicture'});
             }}>
             <Image style={HomeStyle.iconStyle} source={icons.ca} />
           </TouchableOpacity>

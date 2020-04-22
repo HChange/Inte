@@ -1,0 +1,56 @@
+import {StyleSheet} from 'react-native';
+export default StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: 'column',
+    // backgroundColor: 'black',
+    position: 'relative',
+  },
+  preview: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
+  capture: {
+    position: 'absolute',
+    bottom: 0,
+    height: 66,
+    width: 66,
+    backgroundColor: 'rgba(255,255,255,0.7)',
+    borderRadius: 33,
+    borderBottomColor: 'rgba(0,0,0,0.3)',
+    borderWidth: 2.5,
+  },
+  topWrap: {
+    position: 'absolute',
+    height: 60,
+    top: 0,
+    flexDirection: 'row',
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  topIconWrapStyle: {
+    marginLeft: 18,
+    marginRight: 18,
+  },
+  topIconStyle: {
+    width: 27,
+    height: 27,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  takePictureWrap:{
+    width: 74,
+    height: 74,
+    margin: 74,
+    position: 'absolute',
+    borderColor: 'rgba(255,255,255,0.7)',
+    borderWidth: 4,
+    borderRadius: 39,
+    bottom: 0,
+  },
+  showImgComponentTop: {position: 'relative', width: '100%', height: '100%'},
+  showImgComponentTopTO: {marginLeft: 18, marginRight: 18, padding: 16},
+  showImgComponentTopText: {fontSize: 16, color: '#fff'},
+});

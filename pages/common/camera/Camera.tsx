@@ -1,36 +1,29 @@
 'use strict';
 import React, {PureComponent, useCallback, useEffect} from 'react';
-import {StatusBar} from 'react-native';
+import {StatusBar, ToastAndroid, Linking} from 'react-native';
 // import {withNavigationFocus} from 'react-navigation';
 import {useIsFocused, NavigationProp} from '@react-navigation/native';
-import {
-  AppRegistry,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  Image,
-} from 'react-native';
+import {Text, TouchableOpacity, View, Image} from 'react-native';
 import {RNCamera} from 'react-native-camera';
 import IconBox from '../../../assets/index';
-
+import {useDispatch} from 'react-redux';
+import styles from './style';
 type State = {
-  front: Boolean;
-  flash: Boolean;
-  showImg: Boolean;
-  imgUri: any;
-};
-type Props = {
-  [propsName: string]: any;
+  front: boolean;
+  flash: boolean;
+  showImg: boolean;
+  imgUri: string;
+  isRecording: boolean;
 };
 
 type ShowImgComponentProps = {
-  onReTakePicture:()=>void,
+  onReTakePicture: () => void;
   [propsName: string]: any;
-}
-// type Props = {
-//   navigation: NavigationProp;
-// };
+};
+type Props = {
+  navigation: NavigationProp<any>;
+  route: any;
+};
 class Camera extends PureComponent<Props, State> {
   camera: any;
   constructor(props: any) {
@@ -40,6 +33,7 @@ class Camera extends PureComponent<Props, State> {
       flash: false,
       showImg: false,
       imgUri: '',
+      isRecording: false,
     };
   }
   render() {
@@ -49,12 +43,12 @@ class Camera extends PureComponent<Props, State> {
           <ShowImgComponent
             {...this.props}
             {...this.state}
-            onReTakePicture={()=>this.reTakePicture()}
+            onReTakePicture={() => this.reTakePicture()}
           />
         ) : (
           <View style={styles.container}>
             <RNCamera
-              ref={ref => {
+              ref={(ref) => {
                 this.camera = ref;
               }}
               style={styles.preview}
@@ -80,39 +74,39 @@ class Camera extends PureComponent<Props, State> {
                 buttonPositive: '是',
                 buttonNegative: '否',
               }}
-              onGoogleVisionBarcodesDetected={({barcodes}) => {
-                console.log(barcodes);
+              // onGoogleVisionBarcodesDetected={({barcodes}) => {
+              //   console.log(barcodes);
+              // }}
+              // 二维码
+              onBarCodeRead={(...item) => {
+                if ((this.props.route.params.type = 'codeRead')) {
+                  Linking.openURL(item[0].data);
+                }
               }}
             />
-            <View
-              style={{
-                position: 'absolute',
-                height: 60,
-                // backgroundColor: 'red',
-                top: 0,
-                flexDirection: 'row',
-                width: '100%',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-              }}>
+            <View style={styles.topWrap}>
               <TouchableOpacity
                 onPress={() => this.close()}
                 style={styles.topIconWrapStyle}>
                 <Image source={IconBox.close} style={styles.topIconStyle} />
               </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.topIconWrapStyle}
-                onPress={() => this.toggleFlash()}>
-                <Image
-                  source={this.state.flash ? IconBox.copen : IconBox.open}
-                  style={styles.topIconStyle}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.topIconWrapStyle}
-                onPress={() => this.toggleType()}>
-                <Image source={IconBox.trans} style={styles.topIconStyle} />
-              </TouchableOpacity>
+              {this.props.route.params.type === 'takePicture' && (
+                <>
+                  <TouchableOpacity
+                    style={styles.topIconWrapStyle}
+                    onPress={() => this.toggleFlash()}>
+                    <Image
+                      source={this.state.flash ? IconBox.copen : IconBox.open}
+                      style={styles.topIconStyle}
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.topIconWrapStyle}
+                    onPress={() => this.toggleType()}>
+                    <Image source={IconBox.trans} style={styles.topIconStyle} />
+                  </TouchableOpacity>
+                </>
+              )}
             </View>
             <View
               style={{
@@ -120,23 +114,34 @@ class Camera extends PureComponent<Props, State> {
                 flexDirection: 'row',
                 justifyContent: 'center',
               }}>
-              <View
-                style={{
-                  width: 74,
-                  height: 74,
-                  margin: 74,
-                  position: 'absolute',
-                  borderColor: '#fff',
-                  borderWidth: 4,
-                  borderRadius: 39,
-                  bottom: 0,
-                }}>
-                <TouchableOpacity
-                  onPress={this.takePicture.bind(this)}
-                  style={styles.capture}>
-                  {/* <Text style={{fontSize: 14}}> SNAP </Text> */}
-                </TouchableOpacity>
-              </View>
+              {
+                (this.props.route.params.type =
+                  'codeRead' &&
+                  (this.state.isRecording ? (
+                    <View
+                      style={[
+                        styles.takePictureWrap,
+                        {backgroundColor: 'red'},
+                      ]}>
+                      <TouchableOpacity
+                        onPress={() => {
+                          this.stopRecord();
+                        }}
+                        style={[
+                          styles.capture,
+                          {backgroundColor: 'red'},
+                        ]}></TouchableOpacity>
+                    </View>
+                  ) : (
+                    <View style={styles.takePictureWrap}>
+                      <TouchableOpacity
+                        onPress={() => {
+                          this.onPressAction();
+                        }}
+                        style={styles.capture}></TouchableOpacity>
+                    </View>
+                  )))
+              }
             </View>
           </View>
         )}
@@ -144,25 +149,51 @@ class Camera extends PureComponent<Props, State> {
     );
   }
 
+  onPressAction = () => {
+    let type = this.props.route.params.type;
+    if (type === 'takePicture') {
+      this.takePicture();
+    } else {
+      this.takeRecord();
+    }
+  };
   takePicture = async () => {
     if (this.camera) {
-      const options = {quality: 1, base64: true};
+      const options = {quality: 1, base64: false};
       const data = await this.camera.takePictureAsync(options);
-      console.log(data.uri);
       this.setState(() => ({
         showImg: true,
         imgUri: data.uri,
       }));
     }
   };
-
-  reTakePicture(){
-    console.log(123);
+  //开始录像
+  takeRecord = async () => {
+    ToastAndroid.show('开始录像', 1000);
+    this.setState({isRecording: true});
+    const options = {
+      quality: RNCamera.Constants.VideoQuality['480p'],
+      maxFileSize: 100 * 1024 * 1024,
+    };
+    const data = await this.camera.recordAsync(options);
+    this.setState(() => ({
+      showImg: true,
+      imgUri: data.uri,
+    }));
     
+  };
+  //停止录像
+  stopRecord = async () => {
+    ToastAndroid.show('结束录像', 1000);
+    this.setState({isRecording: false});
+    this.camera.stopRecording();
+  };
+  reTakePicture() {
     this.setState({
-      showImg: false
-    })
+      showImg: false,
+    });
   }
+
   close() {
     this.props.navigation.goBack();
   }
@@ -179,66 +210,22 @@ class Camera extends PureComponent<Props, State> {
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'column',
-    // backgroundColor: 'black',
-    position: 'relative',
-  },
-  preview: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-  },
-  capture: {
-    position: 'absolute',
-    bottom: 0,
-    height: 66,
-    width: 66,
-    backgroundColor: '#fff',
-    borderRadius: 33,
-
-    borderBottomColor: '#030303',
-    borderWidth: 2.5,
-  },
-  topIconWrapStyle: {
-    marginLeft: 18,
-    marginRight: 18,
-  },
-  topIconStyle: {
-    // backgroundColor: 'pink',
-    width: 24,
-    height: 24,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  showImgComponentTop: {position: 'relative', width: '100%', height: '100%'},
-  showImgComponentTopTO: {marginLeft: 18,marginRight:18, padding: 16},
-  showImgComponentTopText:{fontSize:16,color:"#fff"}
-});
-
-const ShowImgComponent = (props: ShowImgComponentProps&State) => {
-
-  
+const ShowImgComponent = (props: ShowImgComponentProps & State) => {
+  const dispatch = useDispatch();
   const reTakePicture = useCallback(() => {
-    props.onReTakePicture()
+    props.onReTakePicture();
   }, [props]);
-  const choosePicture = useCallback(
-    () => {
-      console.log('click');
-      // 暂时这么写
-      props.navigation.goBack();
-    },
-    [props],
-  )
+  const choosePicture = useCallback(() => {
+    props.navigation.navigate('editPost', {imgUrl: props.imgUri});
+    // props.navigation.goBack();
+    dispatch({type: 'addImg', value: props.imgUri});
+  }, [props]);
   return (
     <View style={styles.showImgComponentTop}>
       <Image
         style={{width: '100%', height: '100%'}}
         source={{
-          uri:
-            props.imgUri
+          uri: props.imgUri,
         }}
       />
       <View
@@ -266,7 +253,6 @@ const ShowImgComponent = (props: ShowImgComponentProps&State) => {
     </View>
   );
 };
-
 
 const CameraWrap = (props: Props, state: any) => {
   const isFocused = useIsFocused();
