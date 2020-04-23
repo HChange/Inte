@@ -28,7 +28,14 @@ const Mine: React.FC<any> = (props: any) => {
     }
     return tmp;
   }
-
+  async function requestData(pageNum:number, pageSize:number) {
+    let response = await fetch(
+      api.GET_USERALLPOST +
+        `?userId=${userInfo._id}&pageSize=${pageSize}&pageNum=${pageNum}`,
+    );
+    let result = await response.json();
+    return result;
+  }
   return (
     <>
       <Dialog.Container visible={editVisible}>
@@ -41,7 +48,9 @@ const Mine: React.FC<any> = (props: any) => {
           onChangeText={(value) => {
             setSign(value);
           }}
-          onFocus={() => {setEditFouce(true)}}
+          onFocus={() => {
+            setEditFouce(true);
+          }}
           count={30}
           numberOfLines={3}
           placeholder="优秀的自我介绍，可以让更多人认识你"
@@ -60,12 +69,11 @@ const Mine: React.FC<any> = (props: any) => {
           onPress={async () => {
             setEditVisible(false);
             setSignTmp(sign);
-            let response = await fetch(api.SET_SIGN+"?sign="+sign);
+            let response = await fetch(api.SET_SIGN + '?sign=' + sign);
             let result = await response.json();
-            if(result&&result.code===0){
-      
-              ToastAndroid.show('设置成功',500);
-            }else{
+            if (result && result.code === 0) {
+              ToastAndroid.show('设置成功', 500);
+            } else {
               ToastAndroid.show('设置失败', 500);
             }
           }}
@@ -74,7 +82,7 @@ const Mine: React.FC<any> = (props: any) => {
       <View style={styles.wrap}>
         <View style={styles.header}>
           <Text style={styles.username} numberOfLines={1}>
-            {userInfo&&userInfo.username}
+            {userInfo && userInfo.username}
           </Text>
           <TouchableOpacity
             onPress={() => {
@@ -141,12 +149,19 @@ const Mine: React.FC<any> = (props: any) => {
             style={styles.editButton}
             type="ghost"
             size="small"
-            onPress={() => {props.navigation.push('editInfo');}}>
+            onPress={() => {
+              props.navigation.push('editInfo');
+            }}>
             编辑主页
           </Button>
         </View>
         <View style={styles.imageListWrap}>
-          <ImageList Render={ImageGroup} pageNumber={16} group={3}/>
+          <ImageList
+            Render={ImageGroup}
+            pageSize={16}
+            group={3}
+            request={requestData}
+          />
         </View>
       </View>
     </>

@@ -12,7 +12,7 @@ type State = {
   front: boolean;
   flash: boolean;
   showImg: boolean;
-  imgUri: string;
+  imgUri: any;
   isRecording: boolean;
 };
 
@@ -32,7 +32,7 @@ class Camera extends PureComponent<Props, State> {
       front: false,
       flash: false,
       showImg: false,
-      imgUri: '',
+      imgUri: {},
       isRecording: false,
     };
   }
@@ -107,7 +107,7 @@ class Camera extends PureComponent<Props, State> {
                     onPress={() => this.toggleFlash()}>
                     <Image
                       source={this.state.flash ? IconBox.copen : IconBox.open}
-                      style={styles.topIconStyle}
+                      style={[styles.topIconStyle,{width: 29,height:29}]}
                     />
                   </TouchableOpacity>
                   <TouchableOpacity
@@ -169,11 +169,11 @@ class Camera extends PureComponent<Props, State> {
   };
   takePicture = async () => {
     if (this.camera) {
-      const options = {quality: 1, base64: false};
+      const options = {quality: 1, base64: true};
       const data = await this.camera.takePictureAsync(options);
       this.setState(() => ({
         showImg: true,
-        imgUri: data.uri,
+        imgUri: data,
       }));
     }
   };
@@ -188,7 +188,7 @@ class Camera extends PureComponent<Props, State> {
     const data = await this.camera.recordAsync(options);
     this.setState(() => ({
       showImg: true,
-      imgUri: data.uri,
+      imgUri: data,
     }));
     
   };
@@ -230,12 +230,16 @@ const ShowImgComponent = (props: ShowImgComponentProps & State) => {
     // props.navigation.goBack();
     dispatch({type: 'addImg', value: props.imgUri});
   }, [props]);
+  const onceMoreTakePicture = useCallback(() => {
+    dispatch({type: 'addImg', value: props.imgUri});
+    props.onReTakePicture();
+  }, [props]);
   return (
     <View style={styles.showImgComponentTop}>
       <Image
         style={{width: '100%', height: '100%'}}
         source={{
-          uri: props.imgUri,
+          uri: props.imgUri.uri,
         }}
       />
       <View
@@ -256,8 +260,13 @@ const ShowImgComponent = (props: ShowImgComponentProps & State) => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.showImgComponentTopTO}
+          onPress={onceMoreTakePicture}>
+          <Text style={styles.showImgComponentTopText}>再来一张</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.showImgComponentTopTO}
           onPress={choosePicture}>
-          <Text style={styles.showImgComponentTopText}>确定</Text>
+          <Text style={styles.showImgComponentTopText}>下一步</Text>
         </TouchableOpacity>
       </View>
     </View>

@@ -1,9 +1,9 @@
 import React from 'react';
 import {View, Text, Image, TouchableOpacity} from 'react-native';
+import { useSelector } from 'react-redux';
 
 const ListHeaderComponent = (props: any) => {
-  // console.log(props);
-
+    const userInfo = useSelector((state: any) => state.user.userInfo);
   return (
     <View
       style={{
@@ -26,7 +26,7 @@ const ListHeaderComponent = (props: any) => {
             style={{width: 56, height: 56, borderRadius: 28}}
             source={{
               uri:
-                'http://softwareengineeringdaily.com/wp-content/uploads/2015/07/react.png',
+                userInfo.icon,
             }}
           />
           <View

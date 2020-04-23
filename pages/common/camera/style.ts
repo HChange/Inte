@@ -52,5 +52,5 @@ export default StyleSheet.create({
   },
   showImgComponentTop: {position: 'relative', width: '100%', height: '100%'},
   showImgComponentTopTO: {marginLeft: 18, marginRight: 18, padding: 16},
-  showImgComponentTopText: {fontSize: 16, color: '#fff'},
+  showImgComponentTopText: {fontSize: 16, color: '#fff',fontWeight:'bold'},
 });

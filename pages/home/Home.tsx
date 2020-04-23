@@ -6,6 +6,8 @@ import ListHeaderComponent from './ListHeaderComponent';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import ImageList from "../../components/ImageList"
 import HomeCard from "./HomeCard"
+import api from '../../config/api';
+import { useSelector } from 'react-redux';
 
 const Home: React.FC<any> = props => {
   // const refreshControlDOM = (
@@ -18,14 +20,24 @@ const Home: React.FC<any> = props => {
   //     size={1}
   //   />
   // );
-
+  const userInfo = useSelector((state: any) => state.user.userInfo);
+  
+  
+async function requestData(pageNum: number, pageSize: number) {
+  let response = await fetch(
+    api.GET_USERALLPOST +
+      `?userId=${userInfo._id}&pageSize=${pageSize}&pageNum=${pageNum}`,
+  );
+  let result = await response.json();
+  return result;
+}
   return (
     <SafeAreaView style={{flex: 1}}>
       <View style={HomeStyle.pageWrap}>
         <View style={HomeStyle.headerWrap}>
           <TouchableOpacity
             onPress={() => {
-              props.navigation.navigate('camera',{type:'takePicture'});
+              props.navigation.navigate('camera', {type: 'takePicture'});
             }}>
             <Image style={HomeStyle.iconStyle} source={icons.ca} />
           </TouchableOpacity>
@@ -43,7 +55,13 @@ const Home: React.FC<any> = props => {
             <Image style={HomeStyle.iconStyle} source={icons.fly} />
           </TouchableOpacity>
         </View>
-        <ImageList pageNumber={10} Render={HomeCard} ListHeaderComponent={ListHeaderComponent} {...props}/>
+        <ImageList
+          Render={HomeCard}
+          ListHeaderComponent={ListHeaderComponent}
+          request={requestData}
+          pageSize={10}
+          {...props}
+        />
       </View>
     </SafeAreaView>
   );

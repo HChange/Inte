@@ -45,17 +45,10 @@ function Navigator() {
   const checkLogin = async () => {
     try {
       const value = await AsyncStorage.getItem('LOGINSTATUS');
-      console.log("value");
-      console.log(value);
-      
       const userInfo = await AsyncStorage.getItem('USERINFO');
-      console.log("test");
-      
-      console.log(userInfo);
 
       if (value === 'true' && userInfo) {
         console.log("重新验证登录");
-        
         dispatch({type: 'login', value: true});
         dispatch({type: 'setUserInfo', value: JSON.parse(userInfo)})
         let newUserInfo;

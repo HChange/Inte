@@ -1,81 +1,95 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, FlatList, Image} from 'react-native';
+import {View, Text, FlatList} from 'react-native';
 import DefaultListEmptyComponent from '../components/ListEmptyComponent';
 import DefaultListFooterComponent from '../components/ListFooterComponent';
+import {useSelector} from 'react-redux';
 interface Props {
   Render: React.FC<any>;
-  pageNumber: number;
+  pageSize: number;
   group?: number;
   ListEmptyComponent?: React.FC<any>;
   ListHeaderComponent?: React.FC<any>;
   ListFooterComponent?: React.FC<any>;
+  request: (pageNum: number, pageSize: number) => any;
 }
 const ImageList: React.FC<Props> = (props) => {
   const {
     Render,
-    pageNumber,
+    pageSize,
     group,
-    ListHeaderComponent=null,
+    ListHeaderComponent = null,
     ListEmptyComponent = DefaultListEmptyComponent,
     ListFooterComponent = DefaultListFooterComponent,
+    request,
   } = props;
 
-  const [imageData, setImageData] = useState<any[]>([]);
-  const [pageIndex, setPageIndex] = useState<number>(1);
-  const [pageNum, setPageNum] = useState<number>(pageNumber);
+  const [initPostData, setInitPostData] = useState<any[]>([]);
+  const [pageNum, setPageNum] = useState<number>(1);
   const [canLoadMore, setCanLoadMore] = useState<boolean>(true);
-  let i = 0;
+  const [refreshing, setRefreshing] = useState<boolean>(false);
+  const [refresh, setRefresh] = useState<number>(0);
+  const isLogin = useSelector(
+    (state: any) => state.loginStatus.loginStatus,
+  );
+
   useEffect(() => {
+    if(!isLogin){
+      setInitPostData([]);
+      return;
+    }
+    
     setCanLoadMore(false);
-    setTimeout(() => {
-      let newData = mock();
+    setTimeout(async () => {
+      let newData = await request(pageNum, pageSize);
       if (!newData) return;
-      let formatData = [];
+      let postData = newData.data.data;
+      let groupData = [];
       let tmp = 1;
       if (group) {
         do {
-          formatData.push(newData.slice((tmp - 1) * group, tmp * group));
+          groupData.push(postData.slice((tmp - 1) * group, tmp * group));
           tmp += 1;
-        } while (tmp * group <= newData.length);
+        } while (tmp * group <= postData.length);
       } else {
-        formatData = newData;
+        groupData = postData;
       }
       setCanLoadMore(true);
-      setImageData([...imageData, ...formatData]);
-    }, 2000);
-  }, [pageIndex, pageNum]);
-  function mock() {
-    let mockData: any[] = [];
-    for (let i = (pageIndex - 1) * pageNum + 1; i <= pageIndex * pageNum; i++) {
-      mockData.push({
-        key: '' + i,
-        source: `https://wallpaper.infinitynewtab.com/wallpaper/${i}.jpg`,
-      });
+      setRefreshing(false);
+      setInitPostData([...initPostData, ...groupData]);
+    }, 20);
+  }, [pageNum, pageSize, refresh]);
+  useEffect(() => {
+    if(!isLogin){
+      setInitPostData([]);
+      setPageNum(1);
     }
-    return mockData;
-  }
-
+  }, [isLogin])
   return (
     <View>
       <FlatList
-        data={imageData}
+        data={initPostData}
         onEndReachedThreshold={0.1}
-        refreshing={false}
+        refreshing={refreshing}
         ListEmptyComponent={<ListEmptyComponent />}
-        ListHeaderComponent={ListHeaderComponent?<ListHeaderComponent {...props}/>:(<></>)}
+        ListHeaderComponent={
+          ListHeaderComponent ? <ListHeaderComponent {...props} /> : <></>
+        }
         ListFooterComponent={<ListFooterComponent />}
         onRefresh={() => {
-          console.log('下拉刷新...');
+          setRefresh(refresh + 1);
+          setRefreshing(true);
+          setInitPostData([]);
+          setPageNum(1);
         }}
         renderItem={({item}) => {
           return <Render item={item} />;
         }}
         keyExtractor={(_item) => {
-          return _item[0] ? _item[0].key : _item.key;
+          return _item[0] ? _item[0]._id : _item._id;
         }}
         onEndReached={() => {
           if (canLoadMore) {
-            setPageIndex(pageIndex + 1);
+            setPageNum(pageNum + 1);
           }
         }}
         // refreshControl={refreshControlDOM}
