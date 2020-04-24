@@ -4,7 +4,7 @@ import {View, Text} from 'react-native';
 const Upload = () => {
   return (
     <View>
-      <Text>yupload</Text>
+      {/* <WebView></WebView> */}
     </View>
   );
 };

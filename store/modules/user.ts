@@ -20,13 +20,11 @@ export default (state = initialState, action: {type: any; value: any}) => {
   switch (action.type) {
     case userType.SET_USERINFO:
       return {
-        ...state,
         userInfo: action.value,
       };
     case userType.CLEAR_USERINFO:
       return {
-        ...state,
-        userInfo: null,
+        userInfo: {},
       };
     default:
       return state;

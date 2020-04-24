@@ -3,8 +3,13 @@ import {Provider} from 'react-redux';
 import configStore from './store/index';
 import Navigator from './Navigator'
 import { StatusBar } from 'react-native';
+import {RFHttpConfig} from 'react-native-fast-app';
+
 const store = configStore();
 const App = () => {
+  useEffect(() => {
+   RFHttpConfig().initHttpLogOn(true);
+  });
   return (
     <Provider store={store}>
       <StatusBar animated backgroundColor='#f0f0f0' barStyle="dark-content" />

@@ -99,7 +99,10 @@ function renderTime(date: any) {
             onPress={() => {
               setCollection(!collection);
             }}>
-            <Image style={HomeStyle.cardIcon} source={collection?icons.colla:icons.coll} />
+            <Image
+              style={HomeStyle.cardIcon}
+              source={collection ? icons.colla : icons.coll}
+            />
           </TouchableOpacity>
         </View>
       </View>
@@ -115,11 +118,11 @@ function renderTime(date: any) {
           <Image
             style={HomeStyle.replyerIcon}
             source={{
-              uri: userInfo.icon,
+              uri: userInfo ? userInfo.icon:"",
             }}
           />
           <TouchableOpacity
-            onPress={() => ToastAndroid.show(userInfo._id, 500)}>
+            onPress={() => ToastAndroid.show(userInfo?userInfo._id:"", 500)}>
             <Text style={HomeStyle.addReply}>添加评论...</Text>
           </TouchableOpacity>
         </View>

@@ -26,7 +26,7 @@ const Home: React.FC<any> = props => {
 async function requestData(pageNum: number, pageSize: number) {
   let response = await fetch(
     api.GET_USERALLPOST +
-      `?userId=${userInfo._id}&pageSize=${pageSize}&pageNum=${pageNum}`,
+      `?userId=${userInfo?userInfo._id:""}&pageSize=${pageSize}&pageNum=${pageNum}`,
   );
   let result = await response.json();
   return result;

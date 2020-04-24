@@ -169,7 +169,7 @@ class Camera extends PureComponent<Props, State> {
   };
   takePicture = async () => {
     if (this.camera) {
-      const options = {quality: 1, base64: true};
+      const options = {quality: 1, base64: false};
       const data = await this.camera.takePictureAsync(options);
       this.setState(() => ({
         showImg: true,
