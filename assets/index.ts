@@ -3,6 +3,7 @@ import homes from './homes.png';
 import search from './search.png';
 import searchs from './searchs.png';
 import upload from './upload.png';
+import uploads from './adds.png';
 import like from './like.png';
 import redLike from './redLike.png';
 import likes from './likes.png';
@@ -39,6 +40,7 @@ const iconMap = {
   likes,
   redLike,
   upload,
+  uploads,
   user,
   users,
 

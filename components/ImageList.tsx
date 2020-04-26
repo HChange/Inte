@@ -11,6 +11,7 @@ interface Props {
   ListHeaderComponent?: React.FC<any>;
   ListFooterComponent?: React.FC<any>;
   request: (pageNum: number, pageSize: number) => any;
+
 }
 const ImageList: React.FC<Props> = (props) => {
   const {
@@ -64,6 +65,7 @@ const ImageList: React.FC<Props> = (props) => {
       setPageNum(1);
     }
   }, [isLogin])
+
   return (
     <View>
       <FlatList

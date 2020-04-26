@@ -35,6 +35,11 @@ export default (state = initialState, action: any) => {
         ...state,
         imgList: newImgList,
       };
+    case 'clearImg':
+      return {
+        ...state,
+        imgList: [],
+      };
     default:
       return state;
   }

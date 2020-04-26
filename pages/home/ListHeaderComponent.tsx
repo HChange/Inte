@@ -56,7 +56,7 @@ const ListHeaderComponent = (props: any) => {
         </View>
 
         <Text style={{fontSize: 12, color: '#333333', marginLeft: 19}}>
-          短视频
+          扫一扫
         </Text>
       </TouchableOpacity>
     </View>

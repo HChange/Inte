@@ -24,6 +24,7 @@ export default [
     name: 'uploadTab',
     id: '2',
     icon: icons.upload,
+    selectIcon: icons.uploads,
     component: Upload,
   },
   {

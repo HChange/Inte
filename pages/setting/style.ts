@@ -3,7 +3,7 @@ export default StyleSheet.create({
   spinnerTextStyle: {
     color: '#FFF',
     fontWeight:'normal',
-    fontSize: 16
+    fontSize: 15
   },
   container: {
     position:"absolute",

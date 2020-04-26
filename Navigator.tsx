@@ -25,7 +25,6 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {useDispatch, useSelector} from 'react-redux';
 import Camera from './pages/common/camera/Camera';
 import tabBarConfig from './config/tabBarConfig';
-
 import api from './config/api';
 
 const BottomTabs = createBottomTabNavigator();

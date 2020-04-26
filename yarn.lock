@@ -1068,6 +1068,13 @@
     color "^3.1.2"
     react-native-iphone-x-helper "^1.2.1"
 
+"@react-navigation/material-top-tabs@^5.1.9":
+  version "5.1.9"
+  resolved "https://registry.npm.taobao.org/@react-navigation/material-top-tabs/download/@react-navigation/material-top-tabs-5.1.9.tgz#518df4e65d5a682f33b664f1cc45f2067a9f9183"
+  integrity sha1-UY305l1aaC8ztmTxzEXyBnqfkYM=
+  dependencies:
+    color "^3.1.2"
+
 "@react-navigation/native@^5.0.7":
   version "5.1.5"
   resolved "https://registry.npm.taobao.org/@react-navigation/native/download/@react-navigation/native-5.1.5.tgz?cache=0&sync_timestamp=1586341150903&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40react-navigation%2Fnative%2Fdownload%2F%40react-navigation%2Fnative-5.1.5.tgz#d07c461c583f98bdc94769f58bdcacfa28e11032"
@@ -5718,6 +5725,11 @@ react-native-swipeout@^2.3.6:
     create-react-class "^15.6.0"
     prop-types "^15.5.10"
     react-tween-state "^0.1.5"
+
+react-native-tab-view@^2.14.0:
+  version "2.14.0"
+  resolved "https://registry.npm.taobao.org/react-native-tab-view/download/react-native-tab-view-2.14.0.tgz?cache=0&sync_timestamp=1586263513952&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Freact-native-tab-view%2Fdownload%2Freact-native-tab-view-2.14.0.tgz#dd801f82fdb8e92fce9688b78d13923f3a5a2b3f"
+  integrity sha1-3YAfgv246S/Oloi3jROSPzpaKz8=
 
 react-native-vector-icons@^6.6.0:
   version "6.6.0"
