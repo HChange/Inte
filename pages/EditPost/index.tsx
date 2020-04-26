@@ -1,73 +1,145 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, Image, ToastAndroid} from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  ToastAndroid,
+  Keyboard,
+  KeyboardAvoidingView,
+  ScrollView,
+} from 'react-native';
 import {NavigationProp} from '@react-navigation/native';
 import {useSelector, useDispatch} from 'react-redux';
 import {Button, TextareaItem} from '@ant-design/react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import axios from 'axios';
 import api from '../../config/api';
-import {RFHttp} from 'react-native-fast-app';
 import styles from './style';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import Loading from '../../components/Loading';
+import {reset} from '@react-navigation/routers/lib/typescript/src/CommonActions';
 
 type Props = {
   navigation: NavigationProp<any>;
   route: any;
 };
-const EditPost: React.FC<Props> = (props) => {
-  let dispatch = useDispatch()
+const EditPost: React.FC<Props> = props => {
+  let dispatch = useDispatch();
   let imgList = useSelector((state: any) => state.camera.imgList);
   let userInfo = useSelector((state: any) => state.user.userInfo);
   const {navigation, route} = props;
   const [desc, setDesc] = useState<string>('');
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
+  const [postText, setPostText] = useState<string>('');
+  const [loadingVisible, setLoadingVisible] = useState(false);
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      _keyboardDidShow,
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      _keyboardDidHide,
+    );
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
 
+  function _keyboardDidShow(e: any) {
+    console.log(e.endCoordinates.height);
+    setKeyboardHeight(e.endCoordinates.height);
+  }
+
+  function _keyboardDidHide(e: any) {
+    setKeyboardHeight(0);
+  }
   async function upload() {
     if (imgList.length <= 0) {
       ToastAndroid.show('请先拍摄一张照片', 1000);
     } else if (desc.length <= 0) {
       ToastAndroid.show('请填写内容信息', 1000);
     } else {
+      /**上传图片 */
+      let formData = new FormData();
+      imgList = imgList.slice(0, 6);
+      imgList.forEach((item: any) => {
+        let file = {
+          uri: item.uri,
+          type: 'multipart/form-data',
+          name: item.uri,
+        };
+        formData.append('file', file);
+      });
       try {
-        let imageUrlArr = [];
-        console.log(imgList.length);
+        setLoadingVisible(true);
+        setPostText('正在上传图像，请稍后...');
+        axios
+          .post('http://www.hellochange.cn:8099/upload', formData, {
+            headers: {'Content-Type': 'multipart/form-data'},
+            timeout: 600000,
+          })
+          .then(res => {
+            if (res.data.code !== 0) {
+              setLoadingVisible(false);
+              ToastAndroid.show(res.data.msg, 1500);
+              return;
+            } else {
+              setPostText('图片上传成功，等待发布...');
+              let imageUrlArr = res.data.data.map((item: any) => {
+                return item.path.replace('/www/wwwroot/', 'https://');
+              });
+              console.log(imageUrlArr);
 
-        for (let i = 0; i < imgList.length; i++) {
-          imageUrlArr.push(
-            `https://wallpaper.infinitynewtab.com/wallpaper/${Math.ceil(
-              Math.random() * 1000,
-            )}.jpg`,
-          );
-        }
-
-        let response = await fetch(api.PUBLISH_POST, {
-          method: 'POST',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            userId: userInfo._id,
-            telephone: userInfo.telephone,
-            desc: desc,
-            imageUrl: imageUrlArr,
-          }),
-        });
-        let result = await response.json();
+              postAction(imageUrlArr);
+            }
+          })
+          .catch(err => {
+            ToastAndroid.show(err, 500);
+          });
         // let result = {code:0,msg:"验证码发送成功"}
-        if (result.code === 0) {
-          ToastAndroid.show(result.msg, 1000);
-          dispatch({type:"clearImg"})
-          navigation.navigate("app",{type:"update"})
-        } else {
-          ToastAndroid.show(result.msg, 500);
-        }
       } catch (error) {
-        ToastAndroid.show(error, 500);
+        ToastAndroid.show(error.message, 500);
       }
     }
   }
+  async function postAction(imageUrlArr: string[]) {
+    try {
+      setPostText('正在发布中，请稍后...');
+      let response = await fetch(api.PUBLISH_POST, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: userInfo._id,
+          telephone: userInfo.telephone,
+          desc: desc,
+          imageUrl: imageUrlArr,
+          time:new Date().getTime()
+        }),
+      });
+      let result = await response.json();
+      if (result.code === 0) {
+        setLoadingVisible(false);
+        ToastAndroid.show('发布成功！', 1500);
+        dispatch({type: 'clearImg'});
+        navigation.navigate('app', {type: 'update'});
+      } else {
+        setLoadingVisible(false);
+        ToastAndroid.show(result.msg, 1500);
+      }
+    } catch (error) {}
+  }
   return (
-    <View style={styles.wrap}>
+    <KeyboardAvoidingView
+      style={styles.wrap}
+      behavior="padding"
+      keyboardVerticalOffset={0}>
+      {/* <ScrollView> */}
+      <Loading loadingVisible={loadingVisible} text={postText} />
       <View style={styles.header}>
         <TouchableOpacity
           onPress={() => {
@@ -91,93 +163,72 @@ const EditPost: React.FC<Props> = (props) => {
       <View style={styles.imageBox}>
         {imgList.map((item: any) => {
           return (
-            <View key={item.uri} style={styles.imageWrap}>
-              <Image
-                key={item.uri}
-                style={styles.image}
-                resizeMode="cover"
-                source={{uri: item.uri}}
-              />
-            </View>
+            <TouchableOpacity
+              key={item && item.uri}
+              onLongPress={() => {
+                dispatch({type: 'deleteImg', value: item.uri});
+              }}>
+              <View style={styles.imageWrap}>
+                <Image
+                  style={styles.image}
+                  resizeMode="cover"
+                  source={{uri: item ? item.uri : ''}}
+                />
+              </View>
+            </TouchableOpacity>
           );
         })}
+        <TouchableOpacity
+          onPress={() => {
+            navigation.goBack();
+          }}>
+          <View style={styles.addImage}>
+            <Text style={styles.addIcon}>+</Text>
+          </View>
+        </TouchableOpacity>
       </View>
+      <Text style={styles.tips}>Tips: 最多只能配6张图,长按可以删除图片哦</Text>
       <Text style={styles.title}>内容</Text>
       <TextareaItem
-      style={styles.textarea}
+        style={styles.textarea}
         value={desc}
-        onChangeText={(value) => {
+        onChangeText={value => {
           setDesc(value);
         }}
         placeholder="请输入你的小想法..."
         count={180}
         // numberOfLines={3}
-        rows={10}
+        rows={3}
       />
-    </View>
+      {/* </ScrollView> */}
+    </KeyboardAvoidingView>
   );
 };
 
 export default EditPost;
 
-// let formData = new FormData();
-// let params: any = [];
-// for (var i = 0; i < imgList.length; i++) {
-//   var uri = imgList[i].uri;
-//   var index = uri.lastIndexOf('/');
-//   var name = uri.substring(index + 1, uri.length);
-//   let file: any = {uri: uri, type: 'multipart/form-data', name: name};
-//   formData.append('file', file);
-//   params.push(file);
+/************假数据代码************* */
+// let imageUrlArr = [];
+
+// for (let i = 0; i < imgList.length; i++) {
+//   imageUrlArr.push(
+//     `https://wallpaper.infinitynewtab.com/wallpaper/${Math.ceil(
+//       Math.random() * 1000,
+//     )}.jpg`,
+//   );
 // }
-// RFHttp()
-//   .url('http://www.hellochange.cn:8099/upload')
-//   .param(params)
-//   .formData() // 对应：multipart/form-data 当然，也可通过ContentType指定或者直接设置header都能实现
-//   .post((success, json, message) => {
-//     console.log(success);
-//     console.log(json);
-//     console.log(message);
-//   });
 
-// console.log(formData);
-// let options:any = {};
-// options.body = formData;
-// options.headers = {'Content-Type': 'multipart/form-data'};
-// options.method = 'POST';
-// var url = 'https://www.hellochange.top/v2/upload';
-// fetch(url, options)
-//   .then((response) => response.json())
-//   .then((responseData) => {
-//     1;
-//     console.warn(responseData);
-//     1;
-//   })
-//   .catch((error) => {
-//     console.warn(error);
-//   })
-// imgList.map((item, index) => {
-//   let file = {
-//     uri: item,
-//     type: 'multipart/form-data',
-//     name: index + '.jpg',
-//   };
-//   formData.append('file', file);
+// let response = await fetch(api.PUBLISH_POST, {
+//   method: 'POST',
+//   headers: {
+//     Accept: 'application/json',
+//     'Content-Type': 'application/json',
+//   },
+//   body: JSON.stringify({
+//     userId: userInfo._id,
+//     telephone: userInfo.telephone,
+//     desc: desc,
+//     imageUrl: imageUrlArr,
+//   }),
 // });
-// console.log(formData._parts);
-
-// axios.post('http://www.hellochange.cn:8099/upload', formData, {
-//   headers: {'Content-Type': 'multipart/form-data'},
-//   timeout: 600000,
-// }).then(res=>{
-//   console.log(res);
-
-// }).catch(err=>{
-//   console.log(err);
-
-// });
-// RFHttp()
-//   .url("http://www.hellochange.cn:8099/upload")
-//   .contentType('multipart/form-data')
-//   .header({contentType: 'multipart/form-data'})
-//   .formData();
+// let result = await response.json();

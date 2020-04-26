@@ -46,6 +46,8 @@ const ImageList: React.FC<Props> = (props) => {
       let postData = newData.data.data;
       let groupData = [];
       let tmp = 1;
+      console.log(newData);
+      
       if (group) {
         do {
           groupData.push(postData.slice((tmp - 1) * group, tmp * group));

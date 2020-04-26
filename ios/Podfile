@@ -37,6 +37,7 @@ target 'Inte' do
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
 
+
   target 'InteTests' do
     inherit! :search_paths
     # Pods for testing

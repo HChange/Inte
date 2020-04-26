@@ -6,6 +6,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import {useDispatch} from 'react-redux';
 import styles from './style';
 import api from '.././../config/api';
+import Loading from '../../components/Loading'
 const Setting = function (props: any) {
   const dispatch = useDispatch();
   const [loadingVisible, setLoadingVisible] = useState(false);
@@ -35,13 +36,7 @@ const Setting = function (props: any) {
   return (
     <>
       <View style={styles.wrap}>
-        <View style={styles.container}>
-          <Spinner
-            visible={loadingVisible}
-            textContent={'正在注销,请稍后...'}
-            textStyle={styles.spinnerTextStyle}
-          />
-        </View>
+        <Loading loadingVisible={loadingVisible} text="正在退出，请稍后..."/>
         <Text>setting</Text>
         <Button type="primary" onPress={logoutAction}>
           退出登录

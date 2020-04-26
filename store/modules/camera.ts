@@ -17,8 +17,6 @@ export const deleteImg = (type: string, value: string) => ({
 });
 export default (state = initialState, action: any) => {
   let newImgList = state.imgList;
-  console.log(newImgList);
-  
   /*判断执行哪个方法*/
   switch (action.type) {
     case 'addImg':
@@ -28,11 +26,10 @@ export default (state = initialState, action: any) => {
         imgList: newImgList,
       };
     case 'deleteImg':
-      newImgList = state.imgList.filter((item) => {
-        return item !== action.value;
+      newImgList = state.imgList.filter((item:any) => {
+        return item.uri !== action.value;
       });
       return {
-        ...state,
         imgList: newImgList,
       };
     case 'clearImg':
