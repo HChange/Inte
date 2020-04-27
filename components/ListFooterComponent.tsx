@@ -1,10 +1,10 @@
 import React from 'react';
-import {View, Text} from 'react-native';
-
+import {View, Text, Image} from 'react-native';
+import loading from '../assets/animate/loading.gif'
 const ListFooterComponent = () => {
   return (
-    <View>
-      <Text style={{textAlign: 'center'}}>正在加载更多...</Text>
+    <View style={{width: "100%",height: 50,justifyContent:'center',alignItems:'center'}}>
+      <Image source={loading} style={{width: 70,height:70}}/>
     </View>
   );
 };

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {View, Text, Image, Linking, ToastAndroid, Alert} from 'react-native';
+import {View, Text, Image, Linking, ToastAndroid, Alert, ImageBackground} from 'react-native';
 import HomeStyle from './style';
 import icons from '../../assets';
 import {Carousel, Popover, Button} from '@ant-design/react-native';
@@ -61,14 +61,14 @@ function renderTime(date: any) {
           {item &&
             item.imageUrl.map((i: any, index: number) => {
               return (
-                <View key={'' + index} style={HomeStyle.bannerOne}>
+                <ImageBackground source={icons.placeholder} key={'' + index} style={HomeStyle.bannerOne}>
                   <Image
                     style={HomeStyle.bannerImg}
                     source={{
                       uri: i,
                     }}
                   />
-                </View>
+                </ImageBackground>
               );
             })}
         </Carousel>

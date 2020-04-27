@@ -24,13 +24,15 @@ import say from './say.png';
 import table from './table.png';
 import mine from './mine.png';
 
-import open from './open.png'
-import copen from './copen.png'
-import close from './close.png'
-import trans from './trans.png'
+import open from './open.png';
+import copen from './copen.png';
+import close from './close.png';
+import trans from './trans.png';
 
+import placeholder from './placeholder.png';
+import nullImg from './null.png';
 /**register */
-import registerUser from './registerUser.png'
+import registerUser from './registerUser.png';
 const iconMap = {
   home,
   homes,
@@ -63,7 +65,8 @@ const iconMap = {
   copen,
   close,
   trans,
-
-  registerUser
+  placeholder,
+  nullImg,
+  registerUser,
 };
 export default iconMap;

@@ -29,6 +29,7 @@ const ImageList: React.FC<Props> = (props) => {
   const [canLoadMore, setCanLoadMore] = useState<boolean>(true);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [refresh, setRefresh] = useState<number>(0);
+  const [count, setCount] = useState<number>(-1);
   const isLogin = useSelector(
     (state: any) => state.loginStatus.loginStatus,
   );
@@ -42,20 +43,22 @@ const ImageList: React.FC<Props> = (props) => {
     setCanLoadMore(false);
     setTimeout(async () => {
       let newData = await request(pageNum, pageSize);
-      if (!newData) return;
+      setCount(newData.data.count)
+      if (!newData) return; 
       let postData = newData.data.data;
       let groupData = [];
       let tmp = 1;
-      console.log(newData);
-      
+/**如果有分组 */
       if (group) {
         do {
           groupData.push(postData.slice((tmp - 1) * group, tmp * group));
           tmp += 1;
-        } while (tmp * group <= postData.length);
+        } while ((tmp-1) * group < postData.length);
       } else {
         groupData = postData;
       }
+      console.log(groupData.length);
+      
       setCanLoadMore(true);
       setRefreshing(false);
       setInitPostData([...initPostData, ...groupData]);
@@ -93,6 +96,9 @@ const ImageList: React.FC<Props> = (props) => {
         }}
         onEndReached={() => {
           if (canLoadMore) {
+            if(count!==-1&&count<=pageSize*pageNum){
+              return;
+            }
             setPageNum(pageNum + 1);
           }
         }}

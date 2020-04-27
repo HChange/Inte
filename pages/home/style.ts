@@ -4,6 +4,7 @@ export default StyleSheet.create({
   pageWrap: {
     width: '100%',
     height: '100%',
+    paddingBottom: 49,
   },
   headerWrap: {
     flexDirection: 'row',
