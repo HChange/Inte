@@ -6,47 +6,15 @@ import {Button} from '@ant-design/react-native';
 import ImagePicker from 'react-native-image-picker';
 import CameraRoll from '@react-native-community/cameraroll';
 import {ScrollView} from 'react-native-gesture-handler';
-import {RFHttp} from 'react-native-fast-app';
 import axios from 'axios';
+
+import PicStore from './PicStore'
+import Location from './Location';
 const Tab = createMaterialTopTabNavigator();
 type Props = {
   navigation: NavigationProp<any>;
 };
-function Home() {
-  const [imageList, setImageList] = useState<any[]>();
-  const _handleButtonPress = () => {
-    CameraRoll.getPhotos({
-      first: 20,
-      assetType: 'Photos',
-    })
-      .then(r => {
-        setImageList(r.edges);
-      })
-      .catch(err => {
-        //Error Loading Images
-      });
-  };
-  return (
-    <View>
-      <Button onPress={_handleButtonPress}>加载图片</Button>
-      <ScrollView>
-        {imageList &&
-          imageList.map((p, i) => {
-            return (
-              <Image
-                key={i}
-                style={{
-                  width: 300,
-                  height: 100,
-                }}
-                source={{uri: p.node.image.uri}}
-              />
-            );
-          })}
-      </ScrollView>
-    </View>
-  );
-}
+
 function Set() {
   const options = {
     title: 'Select Avatar',
@@ -123,8 +91,9 @@ function Set() {
 function Upload() {
   return (
     <Tab.Navigator>
-      <Tab.Screen options={{title: '图库'}} name="Home" component={Home} />
-      <Tab.Screen options={{title: '拍摄'}} name="Settings" component={Set} />
+      <Tab.Screen options={{title: '本地'}} name="Location" component={Location} />
+      <Tab.Screen options={{title: '拍摄'}} name="Camera" component={Set} />
+      <Tab.Screen options={{title: '图库'}} name="PicStore" component={PicStore} />
     </Tab.Navigator>
   );
 }

@@ -12,9 +12,9 @@ const ImageGroup:React.FC<Props> = (props) => {
       <View style={styles.imageWrap}>
         {item&&item.map((_item: any) => {
           return (
-            <ImageBackground style={styles.image} source={icons.placeholder}>
+            <ImageBackground key={_item._id} style={styles.image} source={icons.placeholder}>
               <Image
-                key={_item._id}
+                
                 source={{uri: _item.imageUrl[0]}}
                 style={styles.image}
               />

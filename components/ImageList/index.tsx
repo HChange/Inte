@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {View, Text, FlatList} from 'react-native';
-import DefaultListEmptyComponent from '../components/ListEmptyComponent';
-import DefaultListFooterComponent from '../components/ListFooterComponent';
+import DefaultListEmptyComponent from '../../components/ListEmptyComponent';
+import DefaultListFooterComponent from '../../components/ListFooterComponent';
 import {useSelector} from 'react-redux';
 interface Props {
   Render: React.FC<any>;
@@ -30,6 +30,7 @@ const ImageList: React.FC<Props> = (props) => {
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [refresh, setRefresh] = useState<number>(0);
   const [count, setCount] = useState<number>(-1);
+  const [notMore, setNotMore] = useState(false)
   const isLogin = useSelector(
     (state: any) => state.loginStatus.loginStatus,
   );
@@ -81,8 +82,9 @@ const ImageList: React.FC<Props> = (props) => {
         ListHeaderComponent={
           ListHeaderComponent ? <ListHeaderComponent {...props} /> : <></>
         }
-        ListFooterComponent={<ListFooterComponent />}
+        ListFooterComponent={<ListFooterComponent notMore={notMore}/>}
         onRefresh={() => {
+          setNotMore(false);
           setRefresh(refresh + 1);
           setRefreshing(true);
           setInitPostData([]);
@@ -97,7 +99,10 @@ const ImageList: React.FC<Props> = (props) => {
         onEndReached={() => {
           if (canLoadMore) {
             if(count!==-1&&count<=pageSize*pageNum){
+              setNotMore(true);
               return;
+            }else{
+              setNotMore(false);
             }
             setPageNum(pageNum + 1);
           }
