@@ -27,7 +27,7 @@ export default (state = initialState, action: any) => {
       };
     case 'deleteImg':
       newImgList = state.imgList.filter((item:any) => {
-        return item.uri !== action.value;
+        return item!== action.value;
       });
       return {
         imgList: newImgList,

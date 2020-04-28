@@ -2,14 +2,17 @@ import React, {useState, useCallback} from 'react';
 import {View, Text, RefreshControl} from 'react-native';
 import ImageSelector from '../../components/ImageSelector';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
-
+import {useNavigation} from '@react-navigation/native'
+import { useSelector } from 'react-redux';
 interface Props {}
 
-const Location: React.FC<Props> = props => {
+const PicStore: React.FC<Props> = props => {
   const [selectedList, setSelectedList] = useState<any[]>([]);
   const [mockList, setMockList] = useState<any[]>([]);
   const [loadImg, setLoadImg] = useState<boolean>(false);
   const [refreshMock, setRefreshMock] = useState<boolean>(false);
+  const navigation = useNavigation();
+  const clearKey = useSelector((state:any)=>state.upload.clearKey)
   const handleSelect = useCallback(
     (uri: string, status: boolean) => {
       console.log(selectedList);
@@ -53,13 +56,29 @@ const Location: React.FC<Props> = props => {
             {mockList.map((item, index) => {
               return (
                 <ImageSelector
-                group={3}
+                clearKey={clearKey}
+                  group={3}
                   key={'' + index}
                   onSelect={handleSelect}
                   uri={item}
                 />
               );
             })}
+          </View>
+          <View
+            style={{
+              height: 49,
+              width: '100%',
+              justifyContent: 'center',
+              alignItems: 'flex-end',
+            }}>
+            <TouchableOpacity onPress={() => {
+                navigation.navigate("editPost",{type:'upload'})
+              }}>
+              <Text style={{fontSize: 16, padding: 15, fontWeight: 'bold'}}>
+                继续
+              </Text>
+            </TouchableOpacity>
           </View>
         </ScrollView>
       ) : (
@@ -87,4 +106,4 @@ const Location: React.FC<Props> = props => {
   );
 };
 
-export default Location;
+export default PicStore;

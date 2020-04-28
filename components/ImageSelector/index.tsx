@@ -11,6 +11,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/AntDesign';
 import {useIsFocused, useFocusEffect} from '@react-navigation/native';
 import iconMap from '../../assets';
+import { useDispatch } from 'react-redux';
 
 interface CardProps {
   /**选择的回调函数 */
@@ -25,6 +26,7 @@ interface CardProps {
 const ImageSelector: React.FC<CardProps> = props => {
   const {onSelect, uri, clearKey = 0,group=3} = props;
   const [selected, setSelected] = useState<boolean>(false);
+  const dispatch = useDispatch();
   const isFocus = useIsFocused();
 
   useEffect(() => {
@@ -39,6 +41,11 @@ const ImageSelector: React.FC<CardProps> = props => {
   }, [selected]);
   useEffect(() => {
     onSelect(uri, selected);
+    if(selected){
+      dispatch({type:'addUploadImg',value:uri})
+    }else{
+      dispatch({type:'deleteUploadImg',value:uri})
+    }
   }, [selected]);
 
   return (

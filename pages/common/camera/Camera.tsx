@@ -80,14 +80,13 @@ class Camera extends PureComponent<Props, State> {
               // 二维码
               onBarCodeRead={(...item) => {
                 ToastAndroid.show("识别成功",1000)
-                if ((this.props.route.params.type = 'codeRead')) {
+                if ((this.props.route.params.type === 'codeRead')) {
                   Linking.canOpenURL(item[0].data).then((supported) => {
                     // weixin://  alipay://
                     if (supported) {
                       Linking.openURL(item[0].data);
                     } else {
                       Linking.openURL("https://www.baidu.com/s?wd="+item[0].data)
-
                     }
                   });
                   
@@ -228,10 +227,10 @@ const ShowImgComponent = (props: ShowImgComponentProps & State) => {
   const choosePicture = useCallback(() => {
     props.navigation.navigate('editPost', {imgUrl: props.imgUri});
     // props.navigation.goBack();
-    dispatch({type: 'addImg', value: props.imgUri});
+    dispatch({type: 'addImg', value: props.imgUri.uri});
   }, [props]);
   const onceMoreTakePicture = useCallback(() => {
-    dispatch({type: 'addImg', value: props.imgUri});
+    dispatch({type: 'addImg', value: props.imgUri.uri});
     props.onReTakePicture();
   }, [props]);
   return (

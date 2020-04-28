@@ -14,7 +14,7 @@ interface RealDataItem {
     end_cursor?: string | undefined;
   };
 }
-function Location() {
+function Location(props:any) {
   const [imageList, setImageList] = useState<any[]>();
   const [groupList, setGroupList] = useState<{title: string; count: number}[]>(
     [],
@@ -22,14 +22,8 @@ function Location() {
   const [realGroupData, setRealGroupData] = useState<any[]>([]);
   const [detailList, setDetailList] = useState<any[]>([]);
   const [showDetail, setShowDetail] = useState<boolean>(false);
-  const _handleButtonPress = () => {
-    CameraRoll.getAlbums({assetType: 'Photos'}).then(group => {
-      group = group.filter(item => {
-        return item.title !== '微博动图';
-      });
-      setGroupList(group);
-    });
-  };
+  
+ 
   useEffect(() => {
     if (!groupList) return;
     let groupPromise = groupList.map(
@@ -56,7 +50,17 @@ function Location() {
       }
     });
   }, [groupList]);
-
+  useEffect(() => {
+    _handleButtonPress();
+  }, [])
+  const _handleButtonPress = () => {
+    CameraRoll.getAlbums({assetType: 'Photos'}).then(group => {
+      group = group.filter(item => {
+        return item.title !== '微博动图';
+      });
+      setGroupList(group);
+    });
+  };
   const showImgListAction = async (title: string, count: number) => {
     let _detailList = await CameraRoll.getPhotos({
       first: count,
@@ -76,18 +80,13 @@ function Location() {
         />
       ) : (
         <View>
-          <Button
-            onPress={() => {
-              _handleButtonPress();
-            }}>
-            加载图片
-          </Button>
           <ScrollView>
             <View style={styles.wrap}>
               {realGroupData.length > 0 &&
                 realGroupData.map((item: RealDataItem, index: number) => {
                   return (
                     <TouchableOpacity
+                    key={item.title}
                       onPress={() => showImgListAction(item.title, item.count)}>
                       <View style={styles.imageWrap}>
                         <Image

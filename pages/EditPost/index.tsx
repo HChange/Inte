@@ -25,13 +25,25 @@ type Props = {
 };
 const EditPost: React.FC<Props> = props => {
   let dispatch = useDispatch();
-  let imgList = useSelector((state: any) => state.camera.imgList);
+  let cameraImgList = useSelector((state: any) => state.camera.imgList);
+  let uploadImgList = useSelector((state: any) => state.upload.imgList);
   let userInfo = useSelector((state: any) => state.user.userInfo);
   const {navigation, route} = props;
   const [desc, setDesc] = useState<string>('');
   const [keyboardHeight, setKeyboardHeight] = useState(0);
   const [postText, setPostText] = useState<string>('');
   const [loadingVisible, setLoadingVisible] = useState(false);
+  const [imgList, setImgList] = useState<string[]>([])
+  const [isUpload, setIsUpload] = useState<boolean>(false)
+  useEffect(() => {
+    if(route.params&&route.params.type==="upload"){
+      setImgList(uploadImgList);
+      setIsUpload(true)
+    }else{
+      setImgList(cameraImgList);
+      setIsUpload(false)
+    }
+  }, [route.params,cameraImgList,uploadImgList])
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
       'keyboardDidShow',
@@ -63,12 +75,23 @@ const EditPost: React.FC<Props> = props => {
     } else {
       /**上传图片 */
       let formData = new FormData();
-      imgList = imgList.slice(0, 6);
-      imgList.forEach((item: any) => {
-        let file = {
-          uri: item.uri,
+      let newImgList = imgList.slice(0, 6);
+      let tmp = [...newImgList];
+      /**文件格式的图片 */
+      let fileList = tmp.filter(item=>{
+        return /^file/.test(item);
+      })
+      /**url格式的图片 */
+      let urlList = tmp.filter(item=>{
+        return !/^file/.test(item);
+      })
+
+      
+      fileList.forEach((item: any) => {
+        let file:any = {
+          uri: item,
           type: 'multipart/form-data',
-          name: item.uri,
+          name: item,
         };
         formData.append('file', file);
       });
@@ -90,9 +113,9 @@ const EditPost: React.FC<Props> = props => {
               let imageUrlArr = res.data.data.map((item: any) => {
                 return item.path.replace('/www/wwwroot/', 'https://');
               });
-              console.log(imageUrlArr);
+              console.log([...imageUrlArr,...urlList]);
 
-              postAction(imageUrlArr);
+              postAction([...imageUrlArr,...urlList]);
             }
           })
           .catch(err => {
@@ -125,7 +148,13 @@ const EditPost: React.FC<Props> = props => {
       if (result.code === 0) {
         setLoadingVisible(false);
         ToastAndroid.show('发布成功！', 1500);
-        dispatch({type: 'clearImg'});
+        if(isUpload){
+          dispatch({type: 'clearUploadImg'});
+          dispatch({type: 'clearKey'});
+        }else{
+
+          dispatch({type: 'clearImg'});
+        }
         navigation.navigate('app', {type: 'update'});
       } else {
         setLoadingVisible(false);
@@ -161,18 +190,22 @@ const EditPost: React.FC<Props> = props => {
       </View>
       <Text style={styles.title}>图片</Text>
       <View style={styles.imageBox}>
-        {imgList.map((item: any) => {
+        {imgList.map((item: string,index:number) => {
           return (
             <TouchableOpacity
-              key={item && item.uri}
+              key={item ?item:""+index}
               onLongPress={() => {
-                dispatch({type: 'deleteImg', value: item.uri});
+                if(isUpload){
+                  dispatch({type: 'deleteUploadImg', value: item});
+                }else{
+                  dispatch({type: 'deleteImg', value: item});
+                }
               }}>
               <View style={styles.imageWrap}>
                 <Image
                   style={styles.image}
                   resizeMode="cover"
-                  source={{uri: item ? item.uri : ''}}
+                  source={{uri: item ? item : ''}}
                 />
               </View>
             </TouchableOpacity>
