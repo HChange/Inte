@@ -12,7 +12,7 @@ type Props = {
   navigation: NavigationProp<any>;
   route: any;
 };
-const EditInfo: React.FC<Props> = (props) => {
+const EditInfo: React.FC<Props> = props => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const userInfo = useSelector((state: any) => state.user.userInfo);
@@ -134,11 +134,12 @@ const EditInfo: React.FC<Props> = (props) => {
           <Image
             style={styles.headImg}
             source={{
-              uri:
-                'http://softwareengineeringdaily.com/wp-content/uploads/2015/07/react.png',
+              uri: userInfo ? userInfo.icon : '',
             }}
           />
-          <Text style={styles.headTitle}>更换头像</Text>
+          <TouchableOpacity>
+            <Text style={styles.headTitle}>更换头像</Text>
+          </TouchableOpacity>
         </View>
         <View style={styles.inputWrap}>
           {inputMap.map((item, index) => {
@@ -174,9 +175,9 @@ const EditInfo: React.FC<Props> = (props) => {
           <View style={styles.chooseSex}>
             <Text
               style={{
-                fontSize: sex ? 16 : 19,
+                fontSize: sex ? 16 : 16,
                 fontWeight: sex ? 'normal' : 'bold',
-                color: sex ? '#666' : '#333',
+                color: sex ? '#333' : '#333',
               }}>
               男
             </Text>
@@ -184,7 +185,7 @@ const EditInfo: React.FC<Props> = (props) => {
               trackColor={{false: '#ddd', true: '#ddd'}}
               thumbColor={sex ? 'pink' : '#81b0ff'}
               ios_backgroundColor="#3e3e3e"
-              onValueChange={(value) => {
+              onValueChange={value => {
                 setSex(value);
               }}
               value={sex}

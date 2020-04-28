@@ -1,12 +1,7 @@
-import React, {useState} from 'react';
-import {View, Text, Image} from 'react-native';
+import React from 'react';
 import {NavigationProp} from '@react-navigation/native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import {Button} from '@ant-design/react-native';
-import ImagePicker from 'react-native-image-picker';
-import CameraRoll from '@react-native-community/cameraroll';
 import Camera from './Camera'
-import axios from 'axios';
 
 import PicStore from './PicStore'
 import Location from './Location';

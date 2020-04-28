@@ -97,7 +97,7 @@ const Mine: React.FC<any> = (props: any) => {
               style={styles.headImg}
               source={{
                 uri:
-                  'http://softwareengineeringdaily.com/wp-content/uploads/2015/07/react.png',
+                userInfo?userInfo.icon:""
               }}
             />
             <View style={styles.realInfo}>
