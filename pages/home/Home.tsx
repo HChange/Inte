@@ -14,8 +14,6 @@ const Home: React.FC<any> = props => {
   const [updateKey, setUpdateKey] = useState(0);
   const userInfo = useSelector((state: any) => state.user.userInfo);
   useEffect(() => {
-    console.log(updateKey);
-    
     if (
       props.route &&
       props.route.params &&
@@ -24,7 +22,7 @@ const Home: React.FC<any> = props => {
     ) {
       setUpdateKey(updateKey + 1);
     }
-  }, [props.route]);
+  }, [props.route.params]);
   
 async function requestData(pageNum: number, pageSize: number) {
   try{

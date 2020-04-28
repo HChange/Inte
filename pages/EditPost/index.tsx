@@ -86,19 +86,21 @@ const EditPost: React.FC<Props> = props => {
         return !/^file/.test(item);
       })
 
-      
-      fileList.forEach((item: any) => {
-        let file:any = {
-          uri: item,
-          type: 'multipart/form-data',
-          name: item,
-        };
-        formData.append('file', file);
-      });
+      if(fileList.length>0){
+        fileList.forEach((item: any) => {
+          let file:any = {
+            uri: item,
+            type: 'multipart/form-data',
+            name: item,
+          };
+          formData.append('file', file);
+        });
+      }
       try {
         setLoadingVisible(true);
         setPostText('正在上传图像，请稍后...');
-        axios
+        if(fileList.length>0){
+          axios
           .post('http://www.hellochange.cn:8099/upload', formData, {
             headers: {'Content-Type': 'multipart/form-data'},
             timeout: 600000,
@@ -113,14 +115,17 @@ const EditPost: React.FC<Props> = props => {
               let imageUrlArr = res.data.data.map((item: any) => {
                 return item.path.replace('/www/wwwroot/', 'https://');
               });
-              console.log([...imageUrlArr,...urlList]);
-
               postAction([...imageUrlArr,...urlList]);
             }
           })
           .catch(err => {
             ToastAndroid.show(err, 500);
           });
+        }else{
+          setPostText('图片上传成功，等待发布...');
+          postAction(urlList);
+        }
+        
         // let result = {code:0,msg:"验证码发送成功"}
       } catch (error) {
         ToastAndroid.show(error.message, 500);
