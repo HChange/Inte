@@ -1,25 +1,36 @@
-import React, { useState } from 'react';
-import {View, Text, Image, Linking, ToastAndroid, Alert, ImageBackground} from 'react-native';
+import React, {useState, useRef} from 'react';
+import {
+  View,
+  Text,
+  Image,
+  Linking,
+  ToastAndroid,
+  Alert,
+  ImageBackground,
+} from 'react-native';
 import HomeStyle from './style';
 import icons from '../../assets';
-import {Carousel, Popover, Button} from '@ant-design/react-native';
+import {Carousel, Button} from '@ant-design/react-native';
 import OpenList from './OpenList';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { useSelector } from 'react-redux';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import Popover from 'react-native-popover-view';
+import {useSelector} from 'react-redux';
 
 interface Props {
   item: any;
 }
-const HomeCard: React.FC<Props> = (props) => {
+const HomeCard: React.FC<Props> = props => {
   const {item} = props;
+  const [isVisible, setIsVisible] = useState(false);
+  const ref = useRef<any>();
   /** 时间转化函数（非标准函数）*/
-function renderTime(date: any) {
-  var myDate = new Date(date).toJSON();
-  return new Date(+new Date(myDate) + 8 * 3600 * 1000)
-    .toISOString()
-    .replace(/T/g, ' ')
-    .replace(/\.[\d]{3}Z/, '');
-}
+  function renderTime(date: any) {
+    var myDate = new Date(date).toJSON();
+    return new Date(+new Date(myDate) + 8 * 3600 * 1000)
+      .toISOString()
+      .replace(/T/g, ' ')
+      .replace(/\.[\d]{3}Z/, '');
+  }
   const userInfo = useSelector((state: any) => state.user.userInfo);
   const [like, setLike] = useState<boolean>(false);
   const [collection, setCollection] = useState<boolean>(false);
@@ -38,30 +49,32 @@ function renderTime(date: any) {
           </View>
         </TouchableOpacity>
         <Text style={HomeStyle.cardHName}>{item.userId.username}</Text>
-        <Popover
-          placement="bottom"
-          overlay={
-            <>
-              <OpenList />
-            </>
-          }
-          // triggerStyle={styles.triggerStyle}
-          onSelect={() => {}}>
+
+        <TouchableOpacity onPress={() => setIsVisible(true)}>
           <View style={HomeStyle.cardHMore}>
-            <Image style={HomeStyle.cardHMImg} source={icons.more2} />
+            <Image style={HomeStyle.cardHMImg} source={icons.more2} ref={ref} />
           </View>
+        </TouchableOpacity>
+        <Popover
+          isVisible={isVisible}
+          fromView={ref.current}
+          onRequestClose={() => setIsVisible(false)}>
+          <OpenList />
         </Popover>
       </View>
       <View style={HomeStyle.bannerWrap}>
         <Carousel
           dots={false}
-          afterChange={(current) => {
+          afterChange={current => {
             // console.log(current);
           }}>
           {item &&
             item.imageUrl.map((i: any, index: number) => {
               return (
-                <ImageBackground source={icons.placeholder} key={'' + index} style={HomeStyle.bannerOne}>
+                <ImageBackground
+                  source={icons.placeholder}
+                  key={'' + index}
+                  style={HomeStyle.bannerOne}>
                   <Image
                     style={HomeStyle.bannerImg}
                     source={{
@@ -118,11 +131,13 @@ function renderTime(date: any) {
           <Image
             style={HomeStyle.replyerIcon}
             source={{
-              uri: userInfo ? userInfo.icon:"",
+              uri: userInfo ? userInfo.icon : '',
             }}
           />
           <TouchableOpacity
-            onPress={() => ToastAndroid.show(userInfo?userInfo._id:"", 500)}>
+            onPress={() =>
+              ToastAndroid.show(userInfo ? userInfo._id : '', 500)
+            }>
             <Text style={HomeStyle.addReply}>添加评论...</Text>
           </TouchableOpacity>
         </View>
