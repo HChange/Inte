@@ -158,7 +158,7 @@ const Mine: React.FC<any> = (props: any) => {
         <View style={styles.imageListWrap}>
           <ImageList
             Render={ImageGroup}
-            pageSize={16}
+            pageSize={15}
             group={3}
             request={requestData}
           />
