@@ -1,41 +1,53 @@
-import React, { useEffect, useState } from 'react';
-import {View, Text, Image, FlatList, TouchableOpacity, ToastAndroid} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  View,
+  Text,
+  Image,
+  FlatList,
+  TouchableOpacity,
+  ToastAndroid,
+} from 'react-native';
 import icons from '../../assets/index';
 import HomeStyle from './style';
 import ListHeaderComponent from './ListHeaderComponent';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import ImageList from "../../components/ImageList"
-import HomeCard from "./HomeCard"
+import ImageList from '../../components/ImageList';
+import HomeCard from './HomeCard';
 import api from '../../config/api';
-import { useSelector } from 'react-redux';
-import { Result } from '@ant-design/react-native';
+import {useSelector, useDispatch} from 'react-redux';
+import {get} from '../../common/useRequest';
 
 const Home: React.FC<any> = props => {
   const [updateKey, setUpdateKey] = useState(0);
   const userInfo = useSelector((state: any) => state.user.userInfo);
+  const update = useSelector((state: any) => state.update.update);
+  const dispatch = useDispatch();
   useEffect(() => {
-    if (
-      props.route &&
-      props.route.params &&
-      props.route.params.type &&
-      props.route.params.type === 'update'
-    ) {
+    if (update > 0) {
       setUpdateKey(updateKey + 1);
     }
-  }, [props.route.params]);
-  
-async function requestData(pageNum: number, pageSize: number) {
-  try{
-    let response = await fetch(
-      api.GET_USERALLPOST +
-        `?userId=${userInfo?userInfo._id:""}&pageSize=${pageSize}&pageNum=${pageNum}`,
-    );
-    let result = await response.json();
-    return result;
-  }catch(error){
-    ToastAndroid.show(error.message,1000)
+  }, [update]);
+  useEffect(() => {
+    init();
+  }, []);
+  async function init() {
+    let myLikeList = await get(api.GET_MYLIKELIST + '?userId=' + userInfo._id);
+    dispatch({type: 'addLike', value: myLikeList.data.data});
   }
-}
+  async function requestData(pageNum: number, pageSize: number) {
+    try {
+      let response = await fetch(
+        api.GET_USERALLPOST +
+          `?userId=${
+            userInfo ? userInfo._id : ''
+          }&pageSize=${pageSize}&pageNum=${pageNum}`,
+      );
+      let result = await response.json();
+      return result;
+    } catch (error) {
+      ToastAndroid.show(error.message, 1000);
+    }
+  }
   return (
     <SafeAreaView style={{flex: 1}}>
       <View style={HomeStyle.pageWrap}>
@@ -61,6 +73,7 @@ async function requestData(pageNum: number, pageSize: number) {
           </TouchableOpacity>
         </View>
         <ImageList
+          updateKey={updateKey}
           Render={HomeCard}
           ListHeaderComponent={ListHeaderComponent}
           request={requestData}

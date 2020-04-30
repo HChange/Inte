@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react';
+import React, {useState, useRef, useEffect, useCallback} from 'react';
 import {
   View,
   Text,
@@ -14,8 +14,9 @@ import {Carousel, Button} from '@ant-design/react-native';
 import OpenList from './OpenList';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import Popover from 'react-native-popover-view';
-import {useSelector} from 'react-redux';
-
+import {useSelector, useDispatch} from 'react-redux';
+import {get, post} from '../../common/useRequest';
+import api from '../../config/api';
 interface Props {
   item: any;
 }
@@ -23,6 +24,11 @@ const HomeCard: React.FC<Props> = props => {
   const {item} = props;
   const [isVisible, setIsVisible] = useState(false);
   const ref = useRef<any>();
+  const [like, setLike] = useState<boolean>(false);
+  const [collection, setCollection] = useState<boolean>(false);
+  const userInfo = useSelector((state: any) => state.user.userInfo);
+  const myLikeList = useSelector((state: any) => state.like.myLikeList);
+  const dispatch = useDispatch();
   /** 时间转化函数（非标准函数）*/
   function renderTime(date: any) {
     var myDate = new Date(date).toJSON();
@@ -31,9 +37,36 @@ const HomeCard: React.FC<Props> = props => {
       .replace(/T/g, ' ')
       .replace(/\.[\d]{3}Z/, '');
   }
-  const userInfo = useSelector((state: any) => state.user.userInfo);
-  const [like, setLike] = useState<boolean>(false);
-  const [collection, setCollection] = useState<boolean>(false);
+  useEffect(() => {
+    if (myLikeList) {
+      for (let i = 0; i < myLikeList.length; i++) {
+        if (myLikeList[i].postId === item._id) {
+          setLike(true);
+          break;
+        }
+      }
+    }
+  }, [myLikeList, item]);
+  const addLike = useCallback(() => {
+    if (!like) {
+      post(api.ADD_LIKE, {
+        userId: userInfo._id,
+        postId: item._id,
+        time: new Date().getTime(),
+      }).then(res => {
+        dispatch({type: 'addLike', value: [res.data]});
+        setLike(true);
+      });
+    } else {
+      post(api.DELETE_LIKE, {userId: userInfo._id, postId: item._id}).then(
+        res => {
+          dispatch({type: 'deleteLike', value: [res.data]});
+          setLike(false);
+        },
+      );
+    }
+  }, [userInfo._id, item._id]);
+
   return (
     <View style={HomeStyle.cardWrap}>
       <View style={HomeStyle.cardHeader}>
@@ -88,10 +121,7 @@ const HomeCard: React.FC<Props> = props => {
       </View>
       <View style={HomeStyle.cardAction}>
         <View style={HomeStyle.actionLeft}>
-          <TouchableOpacity
-            onPress={() => {
-              setLike(!like);
-            }}>
+          <TouchableOpacity onPress={addLike}>
             <Image
               style={HomeStyle.cardIcon}
               source={like ? icons.redLike : icons.like}
@@ -131,7 +161,7 @@ const HomeCard: React.FC<Props> = props => {
           <Image
             style={HomeStyle.replyerIcon}
             source={{
-              uri: userInfo ? userInfo.icon : '',
+              uri: userInfo && userInfo.icon ? userInfo.icon : '',
             }}
           />
           <TouchableOpacity

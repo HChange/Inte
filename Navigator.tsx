@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {Image, StatusBar} from 'react-native';
+import React, {useEffect, useState, useCallback} from 'react';
+import {Image, StatusBar, ToastAndroid} from 'react-native';
 
 import AsyncStorage from '@react-native-community/async-storage';
 import Login from './pages/login/Login';
@@ -25,6 +25,7 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {useDispatch, useSelector} from 'react-redux';
 import Camera from './pages/common/camera/Camera';
 import tabBarConfig from './config/tabBarConfig';
+import {get} from './common/useRequest';
 import api from './config/api';
 
 const BottomTabs = createBottomTabNavigator();
@@ -90,9 +91,9 @@ function Navigator() {
     }
   };
   const isLogin = useSelector((state: any) => state.loginStatus.loginStatus);
-  const user = useSelector((state: any) => state.user.userInfo);
-console.log(user);
+  const userInfo = useSelector((state: any) => state.user.userInfo);
 
+ 
   return (
     <>
       <SafeAreaProvider>
@@ -127,7 +128,7 @@ console.log(user);
                                 },
                                 keyboardHidesTabBar: true,
                               }}>
-                              {tabBarConfig.map((item) => {
+                              {tabBarConfig.map(item => {
                                 if (item.children) {
                                   return (
                                     <BottomTabs.Screen
@@ -156,7 +157,7 @@ console.log(user);
                                         <Drawer.Navigator
                                           drawerType="back"
                                           drawerPosition="right"
-                                          drawerContent={(props) => (
+                                          drawerContent={props => (
                                             <DrawerContent {...props} />
                                           )}
                                           edgeWidth={36}

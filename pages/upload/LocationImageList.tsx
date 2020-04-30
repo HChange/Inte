@@ -3,8 +3,8 @@ import {View, Text, StyleSheet, Image, Dimensions} from 'react-native';
 import CameraRoll from '@react-native-community/cameraroll';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import ImageSelector from '../../components/ImageSelector';
-import {useNavigation} from '@react-navigation/native'
-import { useSelector } from 'react-redux';
+import {useNavigation} from '@react-navigation/native';
+import {useSelector} from 'react-redux';
 interface Props {
   /**数据列表 */
   detailList: CameraRoll.PhotoIdentifier[];
@@ -15,7 +15,7 @@ const LocationImageList: React.FC<Props> = props => {
   const {detailList, onBack} = props;
   const [selectedList, setSelectedList] = useState<string[]>([]);
   const [nowTouchImage, setNowTouchImage] = useState<string>('');
-  const clearKey = useSelector((state:any)=>state.upload.clearKey)
+  const clearKey = useSelector((state: any) => state.upload.clearKey);
   const navigation = useNavigation();
   useEffect(() => {
     if (detailList.length <= 0 && !detailList[0].node.image.uri) return;
@@ -50,33 +50,35 @@ const LocationImageList: React.FC<Props> = props => {
               onPress={() => {
                 onBack();
               }}>
-              <Text style={{fontSize: 16,color:'#fff'}}>返回</Text>
+              <Text style={{fontSize: 16, color: '#fff'}}>返回</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate("editPost",{type:'upload'})
+                navigation.navigate('editPost', {type: 'upload'});
               }}>
-            <Text style={{fontSize: 16,color:'#fff'}}>继续</Text>
+              <Text style={{fontSize: 16, color: '#fff'}}>继续</Text>
             </TouchableOpacity>
           </View>
         </View>
       </View>
-      <ScrollView>
-        <View style={styles.wrap}>
-          {detailList.length &&
-            detailList.map((item, index) => {
-              return (
-                <ImageSelector
-                  clearKey={clearKey}
-                  key={item.node.image.uri}
-                  onSelect={handleSelect}
-                  group={4}
-                  uri={item.node.image.uri}
-                />
-              );
-            })}
-        </View>
-      </ScrollView>
+      <View style={styles.box}>
+        <ScrollView>
+          <View style={styles.wrap}>
+            {detailList.length &&
+              detailList.map((item, index) => {
+                return (
+                  <ImageSelector
+                    clearKey={clearKey}
+                    key={item.node.image.uri}
+                    onSelect={handleSelect}
+                    group={4}
+                    uri={item.node.image.uri}
+                  />
+                );
+              })}
+          </View>
+        </ScrollView>
+      </View>
     </View>
   );
 };
@@ -88,11 +90,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
+  box: {
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height-Dimensions.get('window').width,
+    paddingBottom:128,
+  },
   wrap: {
     width: '100%',
     flexWrap: 'wrap',
     flexDirection: 'row',
-    paddingBottom: 49,
   },
   imageView: {
     width: Dimensions.get('window').width,
@@ -107,7 +113,7 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     backgroundColor: 'rgba(0,0,0,0.1)',
-    justifyContent: 'flex-end',
+    // justifyContent: 'flex-end',
   },
 });
 export default LocationImageList;

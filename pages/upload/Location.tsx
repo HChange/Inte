@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
     width: '100%',
     flexWrap: 'wrap',
     flexDirection: 'row',
-    paddingBottom: 49,
+    // paddingBottom: 49,
   },
 
   imageWrap: {

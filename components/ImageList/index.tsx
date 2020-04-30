@@ -11,9 +11,9 @@ interface Props {
   ListHeaderComponent?: React.FC<any>;
   ListFooterComponent?: React.FC<any>;
   request: (pageNum: number, pageSize: number) => any;
-
+  updateKey?: number;
 }
-const ImageList: React.FC<Props> = (props) => {
+const ImageList: React.FC<Props> = props => {
   const {
     Render,
     pageSize,
@@ -22,6 +22,7 @@ const ImageList: React.FC<Props> = (props) => {
     ListEmptyComponent = DefaultListEmptyComponent,
     ListFooterComponent = DefaultListFooterComponent,
     request,
+    updateKey = 0,
   } = props;
 
   const [initPostData, setInitPostData] = useState<any[]>([]);
@@ -30,47 +31,57 @@ const ImageList: React.FC<Props> = (props) => {
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [refresh, setRefresh] = useState<number>(0);
   const [count, setCount] = useState<number>(-1);
-  const [notMore, setNotMore] = useState(false)
-  const isLogin = useSelector(
-    (state: any) => state.loginStatus.loginStatus,
-  );
+  const [notMore, setNotMore] = useState(false);
+  const isLogin = useSelector((state: any) => state.loginStatus.loginStatus);
 
   useEffect(() => {
-    if(!isLogin){
+    if (!isLogin) {
       setInitPostData([]);
       return;
     }
-    
+
     setCanLoadMore(false);
     setTimeout(async () => {
       let newData = await request(pageNum, pageSize);
-      setCount(newData.data.count)
-      if (!newData) return; 
+      setCount(newData.data.count);
+      if (!newData) return;
       let postData = newData.data.data;
       let groupData = [];
       let tmp = 1;
-/**如果有分组 */
+      /**如果有分组 */
       if (group) {
         do {
           groupData.push(postData.slice((tmp - 1) * group, tmp * group));
           tmp += 1;
-        } while ((tmp-1) * group < postData.length);
+        } while ((tmp - 1) * group < postData.length);
       } else {
         groupData = postData;
       }
       console.log(groupData.length);
-      
+
       setCanLoadMore(true);
       setRefreshing(false);
       setInitPostData([...initPostData, ...groupData]);
     }, 20);
   }, [pageNum, pageSize, refresh]);
   useEffect(() => {
-    if(!isLogin){
+    if (!isLogin) {
       setInitPostData([]);
       setPageNum(1);
     }
-  }, [isLogin])
+  }, [isLogin]);
+  useEffect(() => {
+    if (updateKey > 0) {
+      refreshAction();
+    }
+  }, [updateKey]);
+  function refreshAction() {
+    setNotMore(false);
+    setRefresh(refresh + 1);
+    setRefreshing(true);
+    setInitPostData([]);
+    setPageNum(1);
+  }
 
   return (
     <View>
@@ -82,26 +93,20 @@ const ImageList: React.FC<Props> = (props) => {
         ListHeaderComponent={
           ListHeaderComponent ? <ListHeaderComponent {...props} /> : <></>
         }
-        ListFooterComponent={<ListFooterComponent notMore={notMore}/>}
-        onRefresh={() => {
-          setNotMore(false);
-          setRefresh(refresh + 1);
-          setRefreshing(true);
-          setInitPostData([]);
-          setPageNum(1);
-        }}
+        ListFooterComponent={<ListFooterComponent notMore={notMore} />}
+        onRefresh={refreshAction}
         renderItem={({item}) => {
           return <Render item={item} />;
         }}
-        keyExtractor={(_item) => {
+        keyExtractor={_item => {
           return _item[0] ? _item[0]._id : _item._id;
         }}
         onEndReached={() => {
           if (canLoadMore) {
-            if(count!==-1&&count<=pageSize*pageNum){
+            if (count !== -1 && count <= pageSize * pageNum) {
               setNotMore(true);
               return;
-            }else{
+            } else {
               setNotMore(false);
             }
             setPageNum(pageNum + 1);

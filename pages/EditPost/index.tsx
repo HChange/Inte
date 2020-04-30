@@ -33,17 +33,17 @@ const EditPost: React.FC<Props> = props => {
   const [keyboardHeight, setKeyboardHeight] = useState(0);
   const [postText, setPostText] = useState<string>('');
   const [loadingVisible, setLoadingVisible] = useState(false);
-  const [imgList, setImgList] = useState<string[]>([])
-  const [isUpload, setIsUpload] = useState<boolean>(false)
+  const [imgList, setImgList] = useState<string[]>([]);
+  const [isUpload, setIsUpload] = useState<boolean>(false);
   useEffect(() => {
-    if(route.params&&route.params.type==="upload"){
+    if (route.params && route.params.type === 'upload') {
       setImgList(uploadImgList);
-      setIsUpload(true)
-    }else{
+      setIsUpload(true);
+    } else {
       setImgList(cameraImgList);
-      setIsUpload(false)
+      setIsUpload(false);
     }
-  }, [route.params,cameraImgList,uploadImgList])
+  }, [route.params, cameraImgList, uploadImgList]);
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
       'keyboardDidShow',
@@ -78,17 +78,17 @@ const EditPost: React.FC<Props> = props => {
       let newImgList = imgList.slice(0, 6);
       let tmp = [...newImgList];
       /**文件格式的图片 */
-      let fileList = tmp.filter(item=>{
+      let fileList = tmp.filter(item => {
         return /^file/.test(item);
-      })
+      });
       /**url格式的图片 */
-      let urlList = tmp.filter(item=>{
+      let urlList = tmp.filter(item => {
         return !/^file/.test(item);
-      })
+      });
 
-      if(fileList.length>0){
+      if (fileList.length > 0) {
         fileList.forEach((item: any) => {
-          let file:any = {
+          let file: any = {
             uri: item,
             type: 'multipart/form-data',
             name: item,
@@ -99,33 +99,33 @@ const EditPost: React.FC<Props> = props => {
       try {
         setLoadingVisible(true);
         setPostText('正在上传图像，请稍后...');
-        if(fileList.length>0){
+        if (fileList.length > 0) {
           axios
-          .post('http://www.hellochange.cn:8099/upload', formData, {
-            headers: {'Content-Type': 'multipart/form-data'},
-            timeout: 600000,
-          })
-          .then(res => {
-            if (res.data.code !== 0) {
-              setLoadingVisible(false);
-              ToastAndroid.show(res.data.msg, 1500);
-              return;
-            } else {
-              setPostText('图片上传成功，等待发布...');
-              let imageUrlArr = res.data.data.map((item: any) => {
-                return item.path.replace('/www/wwwroot/', 'https://');
-              });
-              postAction([...imageUrlArr,...urlList]);
-            }
-          })
-          .catch(err => {
-            ToastAndroid.show(err, 500);
-          });
-        }else{
+            .post('http://www.hellochange.cn:8099/upload', formData, {
+              headers: {'Content-Type': 'multipart/form-data'},
+              timeout: 600000,
+            })
+            .then(res => {
+              if (res.data.code !== 0) {
+                setLoadingVisible(false);
+                ToastAndroid.show(res.data.msg, 1500);
+                return;
+              } else {
+                setPostText('图片上传成功，等待发布...');
+                let imageUrlArr = res.data.data.map((item: any) => {
+                  return item.path.replace('/www/wwwroot/', 'https://');
+                });
+                postAction([...imageUrlArr, ...urlList]);
+              }
+            })
+            .catch(err => {
+              ToastAndroid.show(err, 500);
+            });
+        } else {
           setPostText('图片上传成功，等待发布...');
           postAction(urlList);
         }
-        
+
         // let result = {code:0,msg:"验证码发送成功"}
       } catch (error) {
         ToastAndroid.show(error.message, 500);
@@ -146,18 +146,19 @@ const EditPost: React.FC<Props> = props => {
           telephone: userInfo.telephone,
           desc: desc,
           imageUrl: imageUrlArr,
-          time:new Date().getTime()
+          time: new Date().getTime(),
         }),
       });
       let result = await response.json();
       if (result.code === 0) {
         setLoadingVisible(false);
         ToastAndroid.show('发布成功！', 1500);
-        if(isUpload){
+        if (isUpload) {
           dispatch({type: 'clearUploadImg'});
           dispatch({type: 'clearKey'});
-        }else{
-
+          dispatch({type: 'publishPost'});
+          dispatch({type: 'update'});
+        } else {
           dispatch({type: 'clearImg'});
         }
         navigation.navigate('app', {type: 'update'});
@@ -165,7 +166,9 @@ const EditPost: React.FC<Props> = props => {
         setLoadingVisible(false);
         ToastAndroid.show(result.msg, 1500);
       }
-    } catch (error) {}
+    } catch (error) {
+      ToastAndroid.show(error,1000)
+    }
   }
   return (
     <KeyboardAvoidingView
@@ -195,14 +198,14 @@ const EditPost: React.FC<Props> = props => {
       </View>
       <Text style={styles.title}>图片</Text>
       <View style={styles.imageBox}>
-        {imgList.map((item: string,index:number) => {
+        {imgList.map((item: string, index: number) => {
           return (
             <TouchableOpacity
-              key={item ?item:""+index}
+              key={item ? item : '' + index}
               onLongPress={() => {
-                if(isUpload){
+                if (isUpload) {
                   dispatch({type: 'deleteUploadImg', value: item});
-                }else{
+                } else {
                   dispatch({type: 'deleteImg', value: item});
                 }
               }}>
