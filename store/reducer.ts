@@ -6,11 +6,14 @@ import camera from './modules/camera';
 import upload from './modules/upload';
 import update from './modules/update';
 import like from './modules/like';
+import collect from './modules/collect';
 export default combineReducers({
   user,
   loginStatus,
   camera,
   upload,
   update,
-  like
+  like,
+  collect,
+  
 });

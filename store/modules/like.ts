@@ -20,9 +20,12 @@ enum likeType {
           myLikeList:[...state.myLikeList,...action.value]
         };
       case likeType.DELETE_LIKE:
+        console.log("delete");
+        console.log(action.value);
+        
         return {
           myLikeList:state.myLikeList.filter((item:any)=>{
-              return item._id !==action.value._id
+              return item.postId !==action.value
           })
         };
       default:

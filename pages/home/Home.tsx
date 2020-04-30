@@ -33,6 +33,8 @@ const Home: React.FC<any> = props => {
   async function init() {
     let myLikeList = await get(api.GET_MYLIKELIST + '?userId=' + userInfo._id);
     dispatch({type: 'addLike', value: myLikeList.data.data});
+    let collectionList = await get(api.GET_COLLECTIONLIST+'?userId='+userInfo._id);
+    dispatch({type:'addCollection',value:collectionList.data.data})
   }
   async function requestData(pageNum: number, pageSize: number) {
     try {

@@ -247,29 +247,3 @@ const EditPost: React.FC<Props> = props => {
 };
 
 export default EditPost;
-
-/************假数据代码************* */
-// let imageUrlArr = [];
-
-// for (let i = 0; i < imgList.length; i++) {
-//   imageUrlArr.push(
-//     `https://wallpaper.infinitynewtab.com/wallpaper/${Math.ceil(
-//       Math.random() * 1000,
-//     )}.jpg`,
-//   );
-// }
-
-// let response = await fetch(api.PUBLISH_POST, {
-//   method: 'POST',
-//   headers: {
-//     Accept: 'application/json',
-//     'Content-Type': 'application/json',
-//   },
-//   body: JSON.stringify({
-//     userId: userInfo._id,
-//     telephone: userInfo.telephone,
-//     desc: desc,
-//     imageUrl: imageUrlArr,
-//   }),
-// });
-// let result = await response.json();

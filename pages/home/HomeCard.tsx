@@ -28,6 +28,7 @@ const HomeCard: React.FC<Props> = props => {
   const [collection, setCollection] = useState<boolean>(false);
   const userInfo = useSelector((state: any) => state.user.userInfo);
   const myLikeList = useSelector((state: any) => state.like.myLikeList);
+  const collectionList = useSelector((state: any) => state.collect.collectionList);
   const dispatch = useDispatch();
   /** 时间转化函数（非标准函数）*/
   function renderTime(date: any) {
@@ -37,6 +38,7 @@ const HomeCard: React.FC<Props> = props => {
       .replace(/T/g, ' ')
       .replace(/\.[\d]{3}Z/, '');
   }
+
   useEffect(() => {
     if (myLikeList) {
       for (let i = 0; i < myLikeList.length; i++) {
@@ -47,7 +49,21 @@ const HomeCard: React.FC<Props> = props => {
       }
     }
   }, [myLikeList, item]);
-  const addLike = useCallback(() => {
+  useEffect(() => {
+    console.log(collectionList.length);
+    
+    if (collectionList) {
+      for (let i = 0; i < collectionList.length; i++) {
+        if (collectionList[i].postId=== item._id) {
+          console.log(collectionList[i].postId);
+          
+          setCollection(true);
+          break;
+        }
+      }
+    }
+  }, [collectionList, item]);
+  const addLike = () => {
     if (!like) {
       post(api.ADD_LIKE, {
         userId: userInfo._id,
@@ -60,13 +76,34 @@ const HomeCard: React.FC<Props> = props => {
     } else {
       post(api.DELETE_LIKE, {userId: userInfo._id, postId: item._id}).then(
         res => {
-          dispatch({type: 'deleteLike', value: [res.data]});
+          dispatch({type: 'deleteLike', value: item._id});
           setLike(false);
         },
       );
     }
-  }, [userInfo._id, item._id]);
-
+  };
+  const collectionAction = () => {
+    console.log(collection);
+    
+    if (!collection) {
+      post(api.ADD_COLLECTION, {
+        userId: userInfo._id,
+        postId: item._id,
+        time: new Date().getTime(),
+      }).then(res => {
+        dispatch({type: 'addCollection', value: [res.data]});
+        setCollection(true);
+      });
+    } else {
+      post(api.DELETE_COLLECTION, {userId: userInfo._id, postId: item._id}).then(
+        res => {
+          dispatch({type: 'deleteCollection', value: item._id});
+          setCollection(false);
+        },
+      );
+    }
+  };
+ 
   return (
     <View style={HomeStyle.cardWrap}>
       <View style={HomeStyle.cardHeader}>
@@ -139,9 +176,7 @@ const HomeCard: React.FC<Props> = props => {
         </View>
         <View style={HomeStyle.actionRight}>
           <TouchableOpacity
-            onPress={() => {
-              setCollection(!collection);
-            }}>
+            onPress={collectionAction}>
             <Image
               style={HomeStyle.cardIcon}
               source={collection ? icons.colla : icons.coll}
@@ -161,7 +196,7 @@ const HomeCard: React.FC<Props> = props => {
           <Image
             style={HomeStyle.replyerIcon}
             source={{
-              uri: userInfo && userInfo.icon ? userInfo.icon : '',
+              uri: (userInfo && userInfo.icon) ? userInfo.icon : '',
             }}
           />
           <TouchableOpacity
