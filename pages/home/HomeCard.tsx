@@ -17,6 +17,7 @@ import Popover from 'react-native-popover-view';
 import {useSelector, useDispatch} from 'react-redux';
 import {get, post} from '../../common/useRequest';
 import api from '../../config/api';
+import formatDate from '../../common/formatDate';
 interface Props {
   item: any;
 }
@@ -30,14 +31,6 @@ const HomeCard: React.FC<Props> = props => {
   const myLikeList = useSelector((state: any) => state.like.myLikeList);
   const collectionList = useSelector((state: any) => state.collect.collectionList);
   const dispatch = useDispatch();
-  /** 时间转化函数（非标准函数）*/
-  function renderTime(date: any) {
-    var myDate = new Date(date).toJSON();
-    return new Date(+new Date(myDate) + 8 * 3600 * 1000)
-      .toISOString()
-      .replace(/T/g, ' ')
-      .replace(/\.[\d]{3}Z/, '');
-  }
 
   useEffect(() => {
     if (myLikeList) {
@@ -207,7 +200,7 @@ const HomeCard: React.FC<Props> = props => {
           </TouchableOpacity>
         </View>
       </View>
-      <Text style={HomeStyle.time}>{renderTime(item.time)}</Text>
+      <Text style={HomeStyle.time}>{formatDate(item.time)}</Text>
     </View>
   );
 };

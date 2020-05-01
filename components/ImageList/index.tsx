@@ -43,6 +43,9 @@ const ImageList: React.FC<Props> = props => {
     setCanLoadMore(false);
     setTimeout(async () => {
       let newData = await request(pageNum, pageSize);
+      if (newData.data.count === 0) {
+        setNotMore(true);
+      }
       setCount(newData.data.count);
       if (!newData) return;
       let postData = newData.data.data;
@@ -57,8 +60,6 @@ const ImageList: React.FC<Props> = props => {
       } else {
         groupData = postData;
       }
-      console.log(groupData.length);
-
       setCanLoadMore(true);
       setRefreshing(false);
       setInitPostData([...initPostData, ...groupData]);

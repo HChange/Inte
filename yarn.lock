@@ -5891,6 +5891,13 @@ react-native-screens@^2.4.0:
   resolved "https://registry.npm.taobao.org/react-native-screens/download/react-native-screens-2.6.0.tgz#6f6e4a79221d4060e3531d12544c581cd82e0a83"
   integrity sha1-b25KeSIdQGDjUx0SVExYHNguCoM=
 
+react-native-search-bar@^3.5.1:
+  version "3.5.1"
+  resolved "https://registry.npm.taobao.org/react-native-search-bar/download/react-native-search-bar-3.5.1.tgz#b05e12ecbe747e0fa43d19084b06db006f7b8097"
+  integrity sha1-sF4S7L50fg+kPRkISwbbAG97gJc=
+  dependencies:
+    prop-types "^15.5.10"
+
 react-native-swipeout@^2.3.6:
   version "2.3.6"
   resolved "https://registry.npm.taobao.org/react-native-swipeout/download/react-native-swipeout-2.3.6.tgz#47dac8a835825cf3f2eef9e495574a3d9ab6d3fa"

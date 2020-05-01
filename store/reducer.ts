@@ -7,6 +7,7 @@ import upload from './modules/upload';
 import update from './modules/update';
 import like from './modules/like';
 import collect from './modules/collect';
+import keyword from './modules/keyword';
 export default combineReducers({
   user,
   loginStatus,
@@ -15,5 +16,6 @@ export default combineReducers({
   update,
   like,
   collect,
+  keyword
   
 });
