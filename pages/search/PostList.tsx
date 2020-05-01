@@ -1,11 +1,23 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet, Image,Dimensions} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  Dimensions,
+  Alert,
+  TouchableHighlightBase,
+} from 'react-native';
 import {useSelector} from 'react-redux';
 import {NavigationProp} from '@react-navigation/native';
 import ImageList from '../../components/ImageList';
 import {get} from '../../common/useRequest';
 import api from '../../config/api';
 import formatDate from '../../common/formatDate';
+import {
+  TouchableOpacity,
+  TouchableHighlight,
+} from 'react-native-gesture-handler';
 interface Props {
   navigation: NavigationProp<any>;
   route: {
@@ -51,6 +63,7 @@ const PostCard: React.FC<PostCardProps> = props => {
       // backgroundColor: 'red',
       borderRadius: 3,
       padding: 10,
+      backgroundColor: 'rgba(0,0,0,.3)',
     },
     ui: {
       flexDirection: 'row',
@@ -66,12 +79,13 @@ const PostCard: React.FC<PostCardProps> = props => {
       fontSize: 18,
       marginLeft: 10,
       fontWeight: 'bold',
-      color: '#214f7c',
+      color: '#ddd',
     },
     desc: {
       fontSize: 14,
       marginTop: 5,
       height: 58,
+      color: '#fff',
     },
     time: {
       fontSize: 12,
@@ -80,25 +94,31 @@ const PostCard: React.FC<PostCardProps> = props => {
     },
   });
   return (
-    <View style={cardStyle.wrap}>
-      <Image
-        style={cardStyle.showImg}
-        source={{uri: imageUrl[0]}}
-        resizeMode="center"
-      />
-      <View style={cardStyle.infoCard}>
-        <View style={cardStyle.ui}>
-          <Image style={cardStyle.icon} source={{uri: icon}} />
-          <Text style={cardStyle.username} numberOfLines={1}>
-            {username}
+    <TouchableOpacity
+      onPress={() => {
+        Alert.alert('a');
+      }}>
+      <View style={cardStyle.wrap}>
+        <Image
+          style={cardStyle.showImg}
+          source={{uri: imageUrl[0]}}
+          resizeMode="cover"
+        />
+        <View style={cardStyle.infoCard}>
+          <View style={cardStyle.ui}>
+            <Image style={cardStyle.icon} source={{uri: icon}} />
+
+            <Text style={cardStyle.username} numberOfLines={1}>
+              {username}
+            </Text>
+          </View>
+          <Text style={cardStyle.desc} numberOfLines={3}>
+            {desc}
           </Text>
+          <Text style={cardStyle.time}>{formatDate(time)}</Text>
         </View>
-        <Text style={cardStyle.desc} numberOfLines={3}>
-          {desc}
-        </Text>
-        <Text style={cardStyle.time}>{formatDate(time)}</Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 const PostList: React.FC<Props> = props => {

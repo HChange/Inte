@@ -23,6 +23,8 @@ export default {
   GET_USERINFO: ADDRESS + '/api/users/get_userInfo',
   /**设置用户信息 */
   SET_USERINFO: ADDRESS + '/api/users/set_userInfo',
+  /**用户查询*/
+  FIND_USER:ADDRESS+'/api/users/find_user',
 
   /*******************************帖子操作************************************** */
   /**发表帖子 */

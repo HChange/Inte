@@ -6,12 +6,12 @@ import {get} from '../../common/useRequest';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {useDispatch, useSelector} from 'react-redux';
 import PostList from './PostList'
+import UserList from './UserList'
+import TelephoneList from './TelephoneList'
 const Search = () => {
   const searchBar = useRef<any>();
   const [keyword, setKeyword] = useState<string>('');
   const searchKeyword = useSelector((state:any)=>state.keyword.keyword);
-  console.log('searchKey' + searchKeyword);
-  
   const dispatch = useDispatch();
   const Tab = createMaterialTopTabNavigator();
 
@@ -45,12 +45,12 @@ const Search = () => {
           <Tab.Screen
             options={{title: '用户名'}}
             name="user"
-            component={TextC}
+            component={UserList}
           />
           <Tab.Screen
             options={{title: '手机号'}}
             name="telephone"
-            component={TextC}
+            component={TelephoneList}
           />
         </Tab.Navigator>
       )}
