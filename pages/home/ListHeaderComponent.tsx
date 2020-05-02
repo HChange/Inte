@@ -9,7 +9,7 @@ const ListHeaderComponent = (props: any) => {
       style={{
         height: 96,
         width: '100%',
-        borderBottomColor: '#eeeeee',
+        borderBottomColor: '#e7e7e7',
         borderBottomWidth: 1,
       }}>
       <TouchableOpacity

@@ -65,6 +65,7 @@ const Login = (props: Props) => {
         setTimeout(() => {
           setLoading(false);
           setDisabled(false);
+          dispatch({type:'update'})
           isLogin(result);
         }, DERATION);
       } else {

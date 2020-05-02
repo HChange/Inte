@@ -155,13 +155,14 @@ const EditPost: React.FC<Props> = props => {
         ToastAndroid.show('发布成功！', 1500);
         if (isUpload) {
           dispatch({type: 'clearUploadImg'});
-          dispatch({type: 'clearKey'});
-          dispatch({type: 'publishPost'});
-          dispatch({type: 'update'});
         } else {
           dispatch({type: 'clearImg'});
         }
-        navigation.navigate('app', {type: 'update'});
+        dispatch({type: 'clearKey'});
+        dispatch({type: 'publishPost'});
+        dispatch({type: 'update'});
+        dispatch({type: 'update'});
+        navigation.navigate('app');
       } else {
         setLoadingVisible(false);
         ToastAndroid.show(result.msg, 1500);

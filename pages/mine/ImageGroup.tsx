@@ -7,8 +7,11 @@ interface Props{
 }
 const ImageGroup:React.FC<Props> = (props) => {
     const {item} = props;
+  console.log(item);
   
     return (
+      <>
+      {item.length>0?
       <View style={styles.imageWrap}>
         {item&&item.map((_item: any) => {
           return (
@@ -21,7 +24,12 @@ const ImageGroup:React.FC<Props> = (props) => {
             </ImageBackground>
           );
         })}
+      </View>:
+      <View key="1">
+        <Text style={{alignSelf:'center',margin: 20}}>空空如也，你还没发过帖子哦</Text>
       </View>
+      }
+      </>
     );
 }
 

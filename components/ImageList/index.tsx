@@ -100,7 +100,7 @@ const ImageList: React.FC<Props> = props => {
           return <Render item={item} />;
         }}
         keyExtractor={_item => {
-          return _item[0] ? _item[0]._id : _item._id;
+          return _item[0] ? _item[0]._id :( _item._id?_item._id:'1');
         }}
         onEndReached={() => {
           if (canLoadMore) {

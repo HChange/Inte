@@ -25,6 +25,8 @@ function Location(props:any) {
   
  
   useEffect(() => {
+    console.log(groupList);
+    
     if (!groupList) return;
     let groupPromise = groupList.map(
       async (item: {title: string; count: number}, index) => {
@@ -57,7 +59,7 @@ function Location(props:any) {
     CameraRoll.getAlbums({assetType: 'Photos'}).then(group => {
       group = group.filter(item => {
         return item.title !== '微博动图';
-      });
+      });  
       setGroupList(group);
     });
   };
