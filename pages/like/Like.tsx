@@ -1,24 +1,159 @@
-import React, {useEffect} from 'react';
-import {View, Text, Image} from 'react-native';
-import img from '../../assets/animate/loading-loop.gif'
-import NullC from '../../components/ListEmptyComponent'
-const Like = () => {
-  useEffect(() => {
-    console.log('创建了...');
-    return () => {
-      console.log('销毁了...');
-    };
-  }, []);
-  return (
-    <View>
-      <View style={{width: 100,height: 100}}>
+import React, {useEffect, useState} from 'react';
+import {View, Text, StyleSheet, Image, Dimensions, Alert} from 'react-native';
+import {useSelector} from 'react-redux';
+import {NavigationProp} from '@react-navigation/native';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import Swiper from 'react-native-swiper';
+import ImageList from '../../components/ImageList';
+import {get} from '../../common/useRequest';
+import api from '../../config/api';
+import formatDate from '../../common/formatDate';
+interface Props {
+  navigation: NavigationProp<any>;
+  route: {
+    key: string;
+    name: string;
+    params: any;
+  };
+}
 
-       <Image source={img}  style={{width: 100,height: 100}} resizeMode="contain"/>
+interface PostCardProps {
+  item: any;
+}
+const PostCard: React.FC<PostCardProps> = props => {
+  let {item} = props;
+  console.log(item);
+  
+  const postId = item.postId._id;
+  const {desc, imageUrl, time} = item.postId;
+  const userId = item.postId.userId._id;
+  const {icon, username} = item.postId.userId;
+  const cardStyle = StyleSheet.create({
+    wrap: {
+      height: Dimensions.get('window').width / 2,
+      width: '100%',
+      borderBottomColor: '#ddd',
+      borderBottomWidth: 1,
+      flexDirection: 'row',
+      padding: 10,
+      position: 'relative',
+    },
+    showImg: {
+      width: '100%',
+      height: '100%',
+      borderRadius: 3,
+    },
+    infoCard: {
+      position: 'absolute',
+      top: 10,
+      left: 10,
+      // backgroundColor: 'red',
+      width: '100%',
+      height: '100%',
+      justifyContent: 'flex-start',
+      // padding: 10,
+      // backgroundColor: 'red',
+      borderRadius: 3,
+      padding: 10,
+      backgroundColor: 'rgba(0,0,0,.3)',
+    },
+    ui: {
+      flexDirection: 'row',
+      height: 50,
+      alignItems: 'center',
+    },
+    icon: {
+      width: 50,
+      height: 50,
+      borderRadius: 50,
+    },
+    username: {
+      fontSize: 18,
+      marginLeft: 10,
+      fontWeight: 'bold',
+      color: '#ddd',
+    },
+    desc: {
+      fontSize: 14,
+      marginTop: 5,
+      height: 58,
+      color: '#fff',
+    },
+    time: {
+      fontSize: 12,
+      color: '#bbb',
+      marginTop: 5,
+    },
+    slide: {
+      flex: 1,
+    },
+  });
+  return (
+    <TouchableOpacity
+      onPress={() => {
+        // Alert.alert('a');
+      }}>
+      <View style={cardStyle.wrap}>
+        <Swiper
+          horizontal={true}
+          autoplay
+          showsPagination={false}
+          showsButtons={false}
+          bounces={true}
+          autoplayTimeout={6}>
+          {imageUrl.map((item: string, index: number) => {
+            return (
+              <View style={cardStyle.slide} key={+index}>
+                <Image
+                  style={cardStyle.showImg}
+                  source={{uri: imageUrl[index]}}
+                  resizeMode="cover"
+                />
+              </View>
+            );
+          })}
+        </Swiper>
+        <View style={cardStyle.infoCard}>
+          <View style={cardStyle.ui}>
+            <Image style={cardStyle.icon} source={{uri: icon}} />
+
+            <Text style={cardStyle.username} numberOfLines={1}>
+              {username}
+            </Text>
+          </View>
+          <Text style={cardStyle.desc} numberOfLines={3}>
+            {desc}
+          </Text>
+          <Text style={cardStyle.time}>{formatDate(time)}</Text>
+        </View>
       </View>
-      <NullC/>
-      <Text>likess</Text>
+    </TouchableOpacity>
+  );
+};
+const PostList: React.FC<Props> = props => {
+  const userInfo = useSelector((state: any) => state.user.userInfo);
+  const myLikeList = useSelector((state: any) => state.like.myLikeList);
+  const [updateKey, setUpdateKey] = useState(0);
+  useEffect(() => {
+    setUpdateKey(updateKey + 1);
+  }, [userInfo._id, myLikeList.length]);
+
+  const request = (pageNum: number, pageSize: number) => {
+    return get(
+      api.GET_MYLIKELIST +
+        `?userId=${userInfo._id}&pageSize=${pageSize}&pageNum=${pageNum}`,
+    );
+  };
+  return (
+    <View style={{flex: 1}}>
+      <ImageList
+        Render={PostCard}
+        pageSize={20}
+        request={request}
+        updateKey={updateKey}
+      />
     </View>
   );
 };
 
-export default Like;
+export default PostList;

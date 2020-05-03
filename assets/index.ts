@@ -33,6 +33,10 @@ import placeholder from './placeholder.png';
 import nullImg from './null.png';
 /**register */
 import registerUser from './registerUser.png';
+import girl from './girl.png';
+import boy from './boy.png';
+
+
 const iconMap = {
   home,
   homes,
@@ -68,5 +72,7 @@ const iconMap = {
   placeholder,
   nullImg,
   registerUser,
+  girl,
+  boy
 };
 export default iconMap;

@@ -35,7 +35,7 @@ const HomeCard: React.FC<Props> = props => {
   useEffect(() => {
     if (myLikeList) {
       for (let i = 0; i < myLikeList.length; i++) {
-        if (myLikeList[i].postId === item._id) {
+        if (myLikeList[i].postId._id === item._id) {
           setLike(true);
           break;
         }
@@ -43,13 +43,9 @@ const HomeCard: React.FC<Props> = props => {
     }
   }, [myLikeList, item]);
   useEffect(() => {
-    console.log(collectionList.length);
-    
     if (collectionList) {
       for (let i = 0; i < collectionList.length; i++) {
-        if (collectionList[i].postId=== item._id) {
-          console.log(collectionList[i].postId);
-          
+        if (collectionList[i].postId._id=== item._id) {
           setCollection(true);
           break;
         }

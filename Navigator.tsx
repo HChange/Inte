@@ -46,8 +46,7 @@ function Navigator() {
     try {
       const value = await AsyncStorage.getItem('LOGINSTATUS');
       const userInfo = await AsyncStorage.getItem('USERINFO');
-
-      if (value === 'true' && userInfo) {
+      if (value === 'true' && userInfo!=="null") {
         console.log('重新验证登录');
         dispatch({type: 'login', value: true});
         dispatch({type: 'setUserInfo', value: JSON.parse(userInfo)});
@@ -60,6 +59,7 @@ function Navigator() {
           dispatch({type: 'setUserInfo', value: newUserInfo});
         }
       } else {
+
         let response = await fetch(api.CHECK_LOGIN, {
           method: 'POST',
           headers: {

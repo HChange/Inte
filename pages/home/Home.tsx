@@ -28,21 +28,34 @@ const Home: React.FC<any> = props => {
     }
   }, [update]);
   useEffect(() => {
+    if (!userInfo) {
+      return;
+    }
     init();
-  }, []);
+  }, [userInfo]);
   async function init() {
     let myLikeList = await get(api.GET_MYLIKELIST + '?userId=' + userInfo._id);
     dispatch({type: 'addLike', value: myLikeList.data.data});
-    let collectionList = await get(api.GET_COLLECTIONLIST+'?userId='+userInfo._id);
-    dispatch({type:'addCollection',value:collectionList.data.data})
+    let collectionList = await get(
+      api.GET_COLLECTIONLIST + '?userId=' + userInfo._id,
+    );
+    dispatch({type: 'addCollection', value: collectionList.data.data});
   }
   async function requestData(pageNum: number, pageSize: number) {
+    if (!userInfo) return {data:{count:0,data:null}};
     try {
+      let myFollow = await get(
+        api.GET_MYFOLLOWLIST + '?myUserId=' + userInfo._id,
+      );
+      let myFollowId = myFollow.data.data.map((item: any) => {
+        return item.userId ? item.userId._id : null;
+      });
+
       let response = await fetch(
-        api.GET_USERALLPOST +
-          `?userId=${
-            userInfo ? userInfo._id : ''
-          }&pageSize=${pageSize}&pageNum=${pageNum}`,
+        api.GET_HOMEALLPOST +
+          `?userId=${myFollowId.push(
+            userInfo._id,
+          )}&pageSize=${pageSize}&pageNum=${pageNum}`,
       );
       let result = await response.json();
       return result;

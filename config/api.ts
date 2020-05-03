@@ -33,6 +33,8 @@ export default {
   DELETE_POST: ADDRESS + '/api/posts/delete_post',
   /**查询一个用户的帖子列表 */
   GET_USERALLPOST: ADDRESS + '/api/posts/get_userAllPost',
+  /**首页数据 */
+  GET_HOMEALLPOST: ADDRESS + '/api/posts/get_homeAllPost',
   /**模糊查询帖子 */
   GET_POST: ADDRESS + '/api/posts/get_post',
   /**获取用户帖子总数 */

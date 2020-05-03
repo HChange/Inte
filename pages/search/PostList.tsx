@@ -1,23 +1,13 @@
 import React, {useEffect, useState} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  Dimensions,
-  Alert,
-  TouchableHighlightBase,
-} from 'react-native';
+import {View, Text, StyleSheet, Image, Dimensions, Alert} from 'react-native';
 import {useSelector} from 'react-redux';
 import {NavigationProp} from '@react-navigation/native';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import Swiper from 'react-native-swiper';
 import ImageList from '../../components/ImageList';
 import {get} from '../../common/useRequest';
 import api from '../../config/api';
 import formatDate from '../../common/formatDate';
-import {
-  TouchableOpacity,
-  TouchableHighlight,
-} from 'react-native-gesture-handler';
 interface Props {
   navigation: NavigationProp<any>;
   route: {
@@ -92,6 +82,9 @@ const PostCard: React.FC<PostCardProps> = props => {
       color: '#bbb',
       marginTop: 5,
     },
+    slide:{
+      flex:1
+    }
   });
   return (
     <TouchableOpacity
@@ -99,11 +92,27 @@ const PostCard: React.FC<PostCardProps> = props => {
         Alert.alert('a');
       }}>
       <View style={cardStyle.wrap}>
-        <Image
-          style={cardStyle.showImg}
-          source={{uri: imageUrl[0]}}
-          resizeMode="cover"
-        />
+        <Swiper
+          horizontal={true}
+          autoplay
+          showsPagination={false}
+          showsButtons={false}
+          bounces={true}
+          autoplayTimeout={6}>
+            {
+              imageUrl.map((item:string,index:number)=>{
+                return (
+                  <View style={cardStyle.slide} key={+index}>
+                    <Image
+                      style={cardStyle.showImg}
+                      source={{uri: imageUrl[index]}}
+                      resizeMode="cover"
+                    />
+                  </View>
+                );
+              })
+            }
+        </Swiper>
         <View style={cardStyle.infoCard}>
           <View style={cardStyle.ui}>
             <Image style={cardStyle.icon} source={{uri: icon}} />
