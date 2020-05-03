@@ -21,11 +21,9 @@ enum collectType {
           collectionList: [...state.collectionList, ...action.value],
         };
       case collectType.DELETE_COLLECT:
-        console.log(state.collectionList);
-
         return {
           collectionList: state.collectionList.filter((item: any) => {
-            return item.postId !== action.value;
+            return item !== action.value;
           }),
         };
       case collectType.CLEAR_COLLECT:

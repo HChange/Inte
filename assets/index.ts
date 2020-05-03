@@ -36,6 +36,9 @@ import registerUser from './registerUser.png';
 import girl from './girl.png';
 import boy from './boy.png';
 
+import collect from './collect.png'
+import collecta from './collecta.png'
+
 
 const iconMap = {
   home,
@@ -73,6 +76,8 @@ const iconMap = {
   nullImg,
   registerUser,
   girl,
-  boy
+  boy,
+  collect,
+  collecta
 };
 export default iconMap;

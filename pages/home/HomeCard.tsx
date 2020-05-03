@@ -35,23 +35,24 @@ const HomeCard: React.FC<Props> = props => {
   useEffect(() => {
     if (myLikeList) {
       for (let i = 0; i < myLikeList.length; i++) {
-        if (myLikeList[i].postId._id === item._id) {
+        if (myLikeList[i] === item._id) {
           setLike(true);
           break;
         }
       }
     }
-  }, [myLikeList, item]);
+  }, [myLikeList.length, item]);
   useEffect(() => {
-    if (collectionList) {
+    if (collectionList.length) {
       for (let i = 0; i < collectionList.length; i++) {
-        if (collectionList[i].postId._id=== item._id) {
+      
+        if (collectionList[i] === item._id) {
           setCollection(true);
           break;
         }
       }
     }
-  }, [collectionList, item]);
+  }, [collectionList.length, item]);
   const addLike = () => {
     if (!like) {
       post(api.ADD_LIKE, {
@@ -59,7 +60,7 @@ const HomeCard: React.FC<Props> = props => {
         postId: item._id,
         time: new Date().getTime(),
       }).then(res => {
-        dispatch({type: 'addLike', value: [res.data]});
+        dispatch({type: 'addLike', value: [res.data.postId]});
         setLike(true);
       });
     } else {
@@ -72,15 +73,14 @@ const HomeCard: React.FC<Props> = props => {
     }
   };
   const collectionAction = () => {
-    console.log(collection);
-    
+
     if (!collection) {
       post(api.ADD_COLLECTION, {
         userId: userInfo._id,
         postId: item._id,
         time: new Date().getTime(),
       }).then(res => {
-        dispatch({type: 'addCollection', value: [res.data]});
+        dispatch({type: 'addCollection', value: [res.data.postId]});
         setCollection(true);
       });
     } else {

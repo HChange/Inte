@@ -23,7 +23,7 @@ enum likeType {
       case likeType.DELETE_LIKE:
         return {
           myLikeList: state.myLikeList.filter((item: any) => {
-            return item.postId !== action.value;
+            return item !== action.value;
           }),
         };
       case likeType.CLEAR_LIKE:

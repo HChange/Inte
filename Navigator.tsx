@@ -15,7 +15,7 @@ import Setting from './pages/setting/Setting';
 import EditInfo from './pages/editInfo/EditInfo';
 import Loading from './pages/common/loading';
 import EditPost from './pages/EditPost';
-
+import Collect from './pages/Collect'
 //转载导航的容器
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -25,7 +25,6 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {useDispatch, useSelector} from 'react-redux';
 import Camera from './pages/common/camera/Camera';
 import tabBarConfig from './config/tabBarConfig';
-import {get} from './common/useRequest';
 import api from './config/api';
 
 const BottomTabs = createBottomTabNavigator();
@@ -175,7 +174,7 @@ function Navigator() {
                                           />
                                           <Drawer.Screen
                                             name="collection"
-                                            component={Setting}
+                                            component={Collect}
                                           />
                                         </Drawer.Navigator>
                                       )}

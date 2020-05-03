@@ -43,8 +43,6 @@ const ImageList: React.FC<Props> = props => {
     setCanLoadMore(false);
     setTimeout(async () => {
       let newData = await request(pageNum, pageSize);
-      console.log(newData);
-      
       if(newData.code!==0){
         ToastAndroid.show(newData.msg,1000);
         setNotMore(true);
