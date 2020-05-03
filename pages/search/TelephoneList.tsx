@@ -34,20 +34,6 @@ const TelephoneList: React.FC<Props> = props => {
       } else {
         setEmpty(false);
         setCardData(res.data.data);
-
-        /**
-         * "data": {"__v": 0, "_id": "5ea516cbd137003a818f14d3",
-         *  "email": "2583608715@qq.com",
-         * "icon": "https://www.hellochange.cn/Inte_server/uploads/1588173449353.jpg",
-         *  "password": "18973552995",
-         * "realName": "change",
-         * "sex": "男",
-         * "sign": "风萧萧兮易水寒，壮士一去兮不复还",
-         *  "telephone": "18973552995",
-         * "username": "change",
-         * "website": "https://www.hellochange.cn",
-         * "wechat": "18973552995"},
-         */
       }
     });
   }, [keyword]);
@@ -92,11 +78,11 @@ const TelephoneList: React.FC<Props> = props => {
   });
   return (
     <>
-      {empty || !cardData._id ? (
+      {empty || !cardData? (
         <ListEmptyComponent />
       ) : (
         <ImageBackground source={{uri: cardData.icon}} style={cardStyle.bg}>
-          <View key={cardData._id} style={cardStyle.wrap}>
+          <View style={cardStyle.wrap}>
             <Image style={cardStyle.headIcon} source={{uri: cardData.icon}} />
 
             <View style={cardStyle.uni}>

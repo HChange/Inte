@@ -1,27 +1,29 @@
-import React, {useRef, useState, useEffect} from 'react';
-import {View, Text, Alert} from 'react-native';
+import React, {useRef, useState} from 'react';
+import {View,Image} from 'react-native';
 import SearchBar from 'react-native-search-bar';
-import api from '../../config/api';
-import {get} from '../../common/useRequest';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {useDispatch, useSelector} from 'react-redux';
 import PostList from './PostList'
 import UserList from './UserList'
 import TelephoneList from './TelephoneList'
+import Swiper from 'react-native-swiper';
+ const mock = () => {
+    let imageUrlArr = [];
+    for (let i = 0; i < 15; i++) {
+      imageUrlArr.push(
+        `https://wallpaper.infinitynewtab.com/wallpaper/${Math.ceil(
+          Math.random() * 2000,
+        )}.jpg`,
+      );
+    }
+    return imageUrlArr;
+  }
 const Search = () => {
   const searchBar = useRef<any>();
   const [keyword, setKeyword] = useState<string>('');
   const searchKeyword = useSelector((state:any)=>state.keyword.keyword);
   const dispatch = useDispatch();
   const Tab = createMaterialTopTabNavigator();
-
-  function searchPost() {
-    get(api.GET_POST);
-  }
-  const TextC = (props:any) => {
-    console.log(props);
-    return <Text>测试</Text>;
-  };
   return (
     <View style={{flex: 1}}>
       <SearchBar
@@ -35,7 +37,7 @@ const Search = () => {
           dispatch({type: 'setSearchKey', value: keyword});
         }}
       />
-      {searchKeyword.length > 0 && (
+      {searchKeyword.length > 0 ? (
         <Tab.Navigator>
           <Tab.Screen
             options={{title: '帖子名'}}
@@ -53,6 +55,26 @@ const Search = () => {
             component={TelephoneList}
           />
         </Tab.Navigator>
+      ) : (
+        <Swiper
+          horizontal={false}
+          autoplay
+          showsPagination={false}
+          showsButtons={false}
+          bounces={true}
+          autoplayTimeout={6}>
+          {mock().map((item: string, index: number) => {
+            return (
+              <View style={{flex: 1}} key={+index}>
+                <Image
+                  style={{width:'100%',height:'100%'}}
+                  source={{uri: item}}
+                  resizeMode="cover"
+                />
+              </View>
+            );
+          })}
+        </Swiper>
       )}
     </View>
   );

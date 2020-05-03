@@ -13,6 +13,7 @@ const ListHeaderComponent = (props: any) => {
         borderBottomWidth: 1,
       }}>
       <TouchableOpacity
+        style={{width: 56, height: 56}}
         onPress={() => props.navigation.navigate('camera', {type: 'codeRead'})}>
         <View
           style={{
@@ -26,7 +27,7 @@ const ListHeaderComponent = (props: any) => {
             // eslint-disable-next-line react-native/no-inline-styles
             style={{width: 56, height: 56, borderRadius: 28}}
             source={{
-              uri: userInfo?userInfo.icon:"",
+              uri: userInfo ? userInfo.icon : '',
             }}
           />
           <View
