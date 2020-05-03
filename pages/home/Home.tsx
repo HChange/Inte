@@ -15,7 +15,7 @@ import ImageList from '../../components/ImageList';
 import HomeCard from './HomeCard';
 import api from '../../config/api';
 import {useSelector, useDispatch} from 'react-redux';
-import {get} from '../../common/useRequest';
+import {get, post} from '../../common/useRequest';
 
 const Home: React.FC<any> = props => {
   const [updateKey, setUpdateKey] = useState(0);
@@ -42,7 +42,6 @@ const Home: React.FC<any> = props => {
     dispatch({type: 'addCollection', value: collectionList.data.data});
   }
   async function requestData(pageNum: number, pageSize: number) {
-    if (!userInfo) return {data:{count:0,data:null}};
     try {
       let myFollow = await get(
         api.GET_MYFOLLOWLIST + '?myUserId=' + userInfo._id,
@@ -51,13 +50,18 @@ const Home: React.FC<any> = props => {
         return item.userId ? item.userId._id : null;
       });
 
-      let response = await fetch(
-        api.GET_HOMEALLPOST +
-          `?userId=${myFollowId.push(
-            userInfo._id,
-          )}&pageSize=${pageSize}&pageNum=${pageNum}`,
-      );
-      let result = await response.json();
+      // let response = await fetch(
+      //   api.GET_HOMEALLPOST +
+      //     `?userId=${JSON.stringify(myFollowId.push(
+      //       userInfo._id,
+      //     ))}&pageSize=${pageSize}&pageNum=${pageNum}`,
+      // );
+      // let result = await response.json();
+      let result = await post(api.GET_HOMEALLPOST, {
+        pageSize,
+        pageNum,
+        userId: myFollowId.push(userInfo._id),
+      });
       return result;
     } catch (error) {
       ToastAndroid.show(error.message, 1000);

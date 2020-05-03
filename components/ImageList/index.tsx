@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, FlatList} from 'react-native';
+import {View, Text, FlatList, ToastAndroid} from 'react-native';
 import DefaultListEmptyComponent from '../../components/ListEmptyComponent';
 import DefaultListFooterComponent from '../../components/ListFooterComponent';
 import {useSelector} from 'react-redux';
@@ -43,13 +43,25 @@ const ImageList: React.FC<Props> = props => {
     setCanLoadMore(false);
     setTimeout(async () => {
       let newData = await request(pageNum, pageSize);
-      console.log(newData);
-      
-      if (newData.data.count === 0) {
+      if(newData.code!==0){
+        ToastAndroid.show(newData.msg,1000);
         setNotMore(true);
+        setRefreshing(false);
+        setCount(0);
+        return;
+      }else{
+        if(newData.data&&newData.data.count&&newData.data.count === 0){
+          setNotMore(true);
+          setRefreshing(false);
+          setCount(0);
+        }else{
+           setNotMore(false);
+           setRefreshing(false);
+           setCount(newData.data.count);
+        }
       }
-      setCount(newData.data.count);
-      if (!newData) return;
+    
+      
       let postData = newData.data.data;
       let groupData = [];
       let tmp = 1;
