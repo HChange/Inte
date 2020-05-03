@@ -1,6 +1,7 @@
 enum likeType {
     ADD_LIKE = 'addLike',
     DELETE_LIKE = 'deleteLike',
+    CLEAR_LIKE='clearLike'
   }
   
   
@@ -17,16 +18,18 @@ enum likeType {
     switch (action.type) {
       case likeType.ADD_LIKE:
         return {
-          myLikeList:[...state.myLikeList,...action.value]
+          myLikeList: [...state.myLikeList, ...action.value],
         };
       case likeType.DELETE_LIKE:
-        console.log("delete");
-        console.log(action.value);
-        
         return {
-          myLikeList:state.myLikeList.filter((item:any)=>{
-              return item.postId !==action.value
-          })
+          myLikeList: state.myLikeList.filter((item: any) => {
+            return item.postId !== action.value;
+          }),
+        };
+      case likeType.CLEAR_LIKE:
+        return {
+          ...state,
+          myLikeList: [],
         };
       default:
         return state;

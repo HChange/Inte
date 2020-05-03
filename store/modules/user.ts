@@ -46,7 +46,11 @@ export default (state = initialState, action: {type: any; value: any}) => {
     case userType.CLEAR_USERDATA:
       return {
         ...state,
-        userData: {},
+         userData: {
+    postCount:0,
+    followCount:0,
+    myFollowCount:0
+  },
       };
     case userType.PUBLISH_POST:
       return {

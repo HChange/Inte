@@ -60,7 +60,7 @@ const EditPost: React.FC<Props> = props => {
   }, []);
 
   function _keyboardDidShow(e: any) {
-    console.log(e.endCoordinates.height);
+    // console.log(e.endCoordinates.height);
     setKeyboardHeight(e.endCoordinates.height);
   }
 

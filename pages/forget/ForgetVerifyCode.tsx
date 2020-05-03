@@ -72,7 +72,7 @@ const ForgetVerifyCode = (props: Props) => {
   const nextStep = useCallback(async () => {
     setLoading(true);
     setDisabled(true);
-    console.log(code);
+    // console.log(code);
     
     try {
       let response = await fetch(

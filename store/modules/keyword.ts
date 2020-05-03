@@ -8,9 +8,14 @@ const initialState = {
 export default (state = initialState, action: {type: any; value: any}) => {
   /*判断执行哪个方法*/
   switch (action.type) {
-    case "setSearchKey":
+    case 'setSearchKey':
       return {
-        keyword:action.value,
+        keyword: action.value,
+      };
+    case "clearSearchKey":
+      return {
+        ...state,
+        keyword: '',
       };
     default:
       return state;

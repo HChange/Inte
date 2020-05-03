@@ -1,6 +1,7 @@
 enum collectType {
     ADD_COLLECT = 'addCollection',
     DELETE_COLLECT = 'deleteCollection',
+    CLEAR_COLLECT = 'clearCollection'
   }
   
   
@@ -9,6 +10,7 @@ enum collectType {
     collectionList:[]
   };
   
+  /**clear */
 
   
   export default (state = initialState, action: {type: any; value: any}) => {
@@ -16,15 +18,20 @@ enum collectType {
     switch (action.type) {
       case collectType.ADD_COLLECT:
         return {
-          collectionList:[...state.collectionList,...action.value]
+          collectionList: [...state.collectionList, ...action.value],
         };
       case collectType.DELETE_COLLECT:
-          console.log(state.collectionList);
-          
+        console.log(state.collectionList);
+
         return {
-          collectionList:state.collectionList.filter((item:any)=>{
-              return item.postId!==action.value
-          })
+          collectionList: state.collectionList.filter((item: any) => {
+            return item.postId !== action.value;
+          }),
+        };
+      case collectType.CLEAR_COLLECT:
+        return {
+          ...state,
+          collectionList: [],
         };
       default:
         return state;

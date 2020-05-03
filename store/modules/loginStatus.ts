@@ -14,9 +14,7 @@ export const logout = (type: string)=>({
 })
 /*输出user仓库模块*/
 export default (state = initialState, action:any) => {
-  console.log(action.value);
-  console.log(state);
-  
+
   /*判断执行哪个方法*/
   switch (action.type) {
     case 'login':

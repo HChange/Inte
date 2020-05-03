@@ -15,7 +15,6 @@ const PicStore: React.FC<Props> = props => {
   const clearKey = useSelector((state:any)=>state.upload.clearKey)
   const handleSelect = useCallback(
     (uri: string, status: boolean) => {
-      console.log(selectedList);
       if (status) {
         setSelectedList([...selectedList, uri]);
       } else {

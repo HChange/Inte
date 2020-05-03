@@ -25,8 +25,6 @@ function Location(props:any) {
   
  
   useEffect(() => {
-    console.log(groupList);
-    
     if (!groupList) return;
     let groupPromise = groupList.map(
       async (item: {title: string; count: number}, index) => {

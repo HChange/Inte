@@ -95,9 +95,6 @@ const Login = (props: Props) => {
     try {
       await AsyncStorage.setItem('LOGINSTATUS', "true")
       await AsyncStorage.setItem('USERINFO', JSON.stringify(userInfo))
-      console.log("userinfo");
-      
-      console.log(JSON.stringify(userInfo));
       
     } catch (e) {
       toast.current.alertWithType('error', '系统错误', e);

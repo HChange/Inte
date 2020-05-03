@@ -7,8 +7,6 @@ interface Props{
 }
 const ImageGroup:React.FC<Props> = (props) => {
     const {item} = props;
-  console.log(item);
-  
     return (
       <>
       {item.length>0?

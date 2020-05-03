@@ -43,6 +43,8 @@ const ImageList: React.FC<Props> = props => {
     setCanLoadMore(false);
     setTimeout(async () => {
       let newData = await request(pageNum, pageSize);
+      console.log(newData);
+      
       if(newData.code!==0){
         ToastAndroid.show(newData.msg,1000);
         setNotMore(true);
@@ -50,18 +52,14 @@ const ImageList: React.FC<Props> = props => {
         setCount(0);
         return;
       }else{
-        if(newData.data&&newData.data.count&&newData.data.count === 0){
+        if(!newData.data||!newData.data.count||!newData.data.count){
           setNotMore(true);
           setRefreshing(false);
           setCount(0);
         }else{
-           setNotMore(false);
-           setRefreshing(false);
            setCount(newData.data.count);
         }
       }
-    
-      
       let postData = newData.data.data;
       let groupData = [];
       let tmp = 1;

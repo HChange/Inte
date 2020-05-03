@@ -47,21 +47,16 @@ const Home: React.FC<any> = props => {
         api.GET_MYFOLLOWLIST + '?myUserId=' + userInfo._id,
       );
       let myFollowId = myFollow.data.data.map((item: any) => {
-        return item.userId ? item.userId._id : null;
+        return item.userId._id;
       });
-
-      // let response = await fetch(
-      //   api.GET_HOMEALLPOST +
-      //     `?userId=${JSON.stringify(myFollowId.push(
-      //       userInfo._id,
-      //     ))}&pageSize=${pageSize}&pageNum=${pageNum}`,
-      // );
-      // let result = await response.json();
+      myFollowId.push(userInfo._id);
       let result = await post(api.GET_HOMEALLPOST, {
         pageSize,
         pageNum,
-        userId: myFollowId.push(userInfo._id),
+        userId: myFollowId,
       });
+      console.log(result);
+      
       return result;
     } catch (error) {
       ToastAndroid.show(error.message, 1000);

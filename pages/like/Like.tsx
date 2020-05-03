@@ -22,7 +22,6 @@ interface PostCardProps {
 }
 const PostCard: React.FC<PostCardProps> = props => {
   let {item} = props;
-  console.log(item);
   
   const postId = item.postId._id;
   const {desc, imageUrl, time} = item.postId;
