@@ -54,7 +54,7 @@ const Mine: React.FC<any> = (props: any) => {
   const init = useCallback(async () => {
     try {
       let myFollowCount = await get(
-        api.GET_MYFOLLOWCOUNT + '?userId=' + userInfo._id,
+        api.GET_MYFOLLOWCOUNT + '?myUserId=' + userInfo._id,
       );
       let followCount = await get(
         api.GET_FOLLOWCOUNT + '?userId=' + userInfo._id,
