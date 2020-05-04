@@ -18,6 +18,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import {get, post} from '../../common/useRequest';
 import api from '../../config/api';
 import formatDate from '../../common/formatDate';
+import { useNavigation } from '@react-navigation/native';
 interface Props {
   item: any;
 }
@@ -30,6 +31,7 @@ const HomeCard: React.FC<Props> = props => {
   const userInfo = useSelector((state: any) => state.user.userInfo);
   const myLikeList = useSelector((state: any) => state.like.myLikeList);
   const collectionList = useSelector((state: any) => state.collect.collectionList);
+ const navigation =  useNavigation();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -174,7 +176,7 @@ const HomeCard: React.FC<Props> = props => {
         </View>
       </View>
       <View style={HomeStyle.desc}>
-        <TouchableOpacity onPress={() => ToastAndroid.show(item._id, 500)}>
+        <TouchableOpacity onPress={() => navigation.navigate('detail',{postId:item._id})}>
           <Text style={HomeStyle.descContent} numberOfLines={1}>
             {item.userId.username}: {item.desc}
           </Text>

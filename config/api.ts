@@ -39,7 +39,8 @@ export default {
   GET_POST: ADDRESS + '/api/posts/get_post',
   /**获取用户帖子总数 */
   GET_POSTCOUNT: ADDRESS + '/api/posts/get_postCount',
-
+  /**id查询 */
+  GET_POSTBYID:ADDRESS+ '/api/posts/get_postById',
   /******************************帖子点赞操作*********************************** */
   /**点赞 */
   ADD_LIKE: ADDRESS + '/api/likes/add_like',

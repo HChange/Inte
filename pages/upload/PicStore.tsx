@@ -74,8 +74,8 @@ const PicStore: React.FC<Props> = props => {
             <TouchableOpacity onPress={() => {
                 navigation.navigate("editPost",{type:'upload'})
               }}>
-              <Text style={{fontSize: 16, padding: 15, fontWeight: 'bold'}}>
-                继续
+              <Text style={{fontSize: 17, padding: 15, fontWeight: 'bold'}}>
+                继续 →
               </Text>
             </TouchableOpacity>
           </View>

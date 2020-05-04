@@ -16,6 +16,7 @@ import EditInfo from './pages/editInfo/EditInfo';
 import Loading from './pages/common/loading';
 import EditPost from './pages/EditPost';
 import Collect from './pages/Collect'
+import Detail from './pages/detail/Detail'
 //转载导航的容器
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -45,7 +46,7 @@ function Navigator() {
     try {
       const value = await AsyncStorage.getItem('LOGINSTATUS');
       const userInfo = await AsyncStorage.getItem('USERINFO');
-      if (value === 'true' && userInfo!=="null") {
+      if (value === 'true' && userInfo !== 'null' && userInfo) {
         console.log('重新验证登录');
         dispatch({type: 'login', value: true});
         dispatch({type: 'setUserInfo', value: JSON.parse(userInfo)});
@@ -58,7 +59,6 @@ function Navigator() {
           dispatch({type: 'setUserInfo', value: newUserInfo});
         }
       } else {
-
         let response = await fetch(api.CHECK_LOGIN, {
           method: 'POST',
           headers: {
@@ -211,6 +211,7 @@ function Navigator() {
                   </Stack.Screen>
                   <Stack.Screen name="direct" component={Setting} />
                   <Stack.Screen name="upload" component={Setting} />
+                  <Stack.Screen name="detail" component={Detail} />
                 </>
               ) : (
                 <Stack.Screen name="login">
