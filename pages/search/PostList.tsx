@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet, Image, Dimensions, Alert} from 'react-native';
 import {useSelector} from 'react-redux';
-import {NavigationProp} from '@react-navigation/native';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import Swiper from 'react-native-swiper';
 import ImageList from '../../components/ImageList';
@@ -22,6 +22,7 @@ interface PostCardProps {
 }
 const PostCard: React.FC<PostCardProps> = props => {
   let {item} = props;
+  const navigation = useNavigation();
   const postId = item._id;
   const {desc, imageUrl, time} = item;
   const userId = item.userId._id;
@@ -88,9 +89,7 @@ const PostCard: React.FC<PostCardProps> = props => {
   });
   return (
     <TouchableOpacity
-      onPress={() => {
-        Alert.alert('a');
-      }}>
+      onPress={() => navigation.navigate('detail', {postId: item._id})}>
       <View style={cardStyle.wrap}>
         <Swiper
           horizontal={true}
@@ -99,19 +98,17 @@ const PostCard: React.FC<PostCardProps> = props => {
           showsButtons={false}
           bounces={true}
           autoplayTimeout={6}>
-            {
-              imageUrl.map((item:string,index:number)=>{
-                return (
-                  <View style={cardStyle.slide} key={+index}>
-                    <Image
-                      style={cardStyle.showImg}
-                      source={{uri: imageUrl[index]}}
-                      resizeMode="cover"
-                    />
-                  </View>
-                );
-              })
-            }
+          {imageUrl.map((item: string, index: number) => {
+            return (
+              <View style={cardStyle.slide} key={+index}>
+                <Image
+                  style={cardStyle.showImg}
+                  source={{uri: imageUrl[index]}}
+                  resizeMode="cover"
+                />
+              </View>
+            );
+          })}
         </Swiper>
         <View style={cardStyle.infoCard}>
           <View style={cardStyle.ui}>

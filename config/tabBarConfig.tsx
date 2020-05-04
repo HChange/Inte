@@ -35,7 +35,7 @@ export default [
     component: Like,
   },
   {
-    name: 'user',
+    name: 'userTab',
     id: '4',
     icon: icons.user,
     selectIcon: icons.users,

@@ -19,12 +19,14 @@ import {get, post} from '../../common/useRequest';
 import api from '../../config/api';
 import formatDate from '../../common/formatDate';
 import { useNavigation } from '@react-navigation/native';
+import ReplyDialog from '../../components/ReplyDialog'
 interface Props {
   item: any;
 }
 const HomeCard: React.FC<Props> = props => {
   const {item} = props;
   const [isVisible, setIsVisible] = useState(false);
+  const [dialogVisible, setDialogVisible] = useState(false)
   const ref = useRef<any>();
   const [like, setLike] = useState<boolean>(false);
   const [collection, setCollection] = useState<boolean>(false);
@@ -97,9 +99,16 @@ const HomeCard: React.FC<Props> = props => {
  
   return (
     <View style={HomeStyle.cardWrap}>
+      <ReplyDialog onClose={()=>setDialogVisible(false)} visible={dialogVisible} postId={item._id} userId={userInfo._id}/>
       <View style={HomeStyle.cardHeader}>
         <TouchableOpacity
-          onPress={() => ToastAndroid.show(item.userId._id, 500)}>
+         onPress={() => {
+           if (item.userId._id===userInfo._id){
+            navigation.navigate('userTab');
+           }else{
+             navigation.navigate('user', {userId: item.userId._id});
+           }
+           }}>
           <View style={HomeStyle.cardHIcon}>
             <Image
               style={HomeStyle.cardHIImg}
@@ -157,7 +166,7 @@ const HomeCard: React.FC<Props> = props => {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
-              Alert.alert('是否评论？');
+              setDialogVisible(true);
             }}>
             <Image style={HomeStyle.cardIcon} source={icons.say} />
           </TouchableOpacity>
@@ -166,8 +175,7 @@ const HomeCard: React.FC<Props> = props => {
           </TouchableOpacity>
         </View>
         <View style={HomeStyle.actionRight}>
-          <TouchableOpacity
-            onPress={collectionAction}>
+          <TouchableOpacity onPress={collectionAction}>
             <Image
               style={HomeStyle.cardIcon}
               source={collection ? icons.colla : icons.coll}
@@ -176,7 +184,8 @@ const HomeCard: React.FC<Props> = props => {
         </View>
       </View>
       <View style={HomeStyle.desc}>
-        <TouchableOpacity onPress={() => navigation.navigate('detail',{postId:item._id})}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('detail', {postId: item._id})}>
           <Text style={HomeStyle.descContent} numberOfLines={1}>
             {item.userId.username}: {item.desc}
           </Text>
@@ -187,12 +196,12 @@ const HomeCard: React.FC<Props> = props => {
           <Image
             style={HomeStyle.replyerIcon}
             source={{
-              uri: (userInfo && userInfo.icon) ? userInfo.icon : '',
+              uri: userInfo && userInfo.icon ? userInfo.icon : '',
             }}
           />
           <TouchableOpacity
             onPress={() =>
-              ToastAndroid.show(userInfo ? userInfo._id : '', 500)
+              setDialogVisible(true)
             }>
             <Text style={HomeStyle.addReply}>添加评论...</Text>
           </TouchableOpacity>

@@ -21,10 +21,12 @@ export default {
   SET_SIGN: ADDRESS + '/api/users/set_sign',
   /**获得用户信息 */
   GET_USERINFO: ADDRESS + '/api/users/get_userInfo',
+  /**id查询 */
+  GET_USERBYID: ADDRESS + '/api/users/get_userById',
   /**设置用户信息 */
   SET_USERINFO: ADDRESS + '/api/users/set_userInfo',
   /**用户查询*/
-  FIND_USER:ADDRESS+'/api/users/find_user',
+  FIND_USER: ADDRESS + '/api/users/find_user',
 
   /*******************************帖子操作************************************** */
   /**发表帖子 */
@@ -40,7 +42,7 @@ export default {
   /**获取用户帖子总数 */
   GET_POSTCOUNT: ADDRESS + '/api/posts/get_postCount',
   /**id查询 */
-  GET_POSTBYID:ADDRESS+ '/api/posts/get_postById',
+  GET_POSTBYID: ADDRESS + '/api/posts/get_postById',
   /******************************帖子点赞操作*********************************** */
   /**点赞 */
   ADD_LIKE: ADDRESS + '/api/likes/add_like',
@@ -51,9 +53,9 @@ export default {
   /**查询帖子的点赞列表 */
   GET_LIKELIST: ADDRESS + '/api/likes/get_likeList',
   /**查询用户点赞过的帖子数 */
-  GET_MYLIKECOUNT: ADDRESS + '/api/likes/get_MyLikeCount',
+  GET_MYLIKECOUNT: ADDRESS + '/api/likes/get_myLikeCount',
   /**查询用户点赞过的帖子列表 */
-  GET_MYLIKELIST: ADDRESS + '/api/likes/get_MyLikeList',
+  GET_MYLIKELIST: ADDRESS + '/api/likes/get_myLikeList',
 
   /********************************帖子评论操作*************************************** */
   /**添加评论 */

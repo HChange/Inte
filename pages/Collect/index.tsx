@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet, Image, Dimensions, Alert} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
-import {NavigationProp} from '@react-navigation/native';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import Swiper from 'react-native-swiper';
 import ImageList from '../../components/ImageList';
@@ -23,7 +23,7 @@ interface PostCardProps {
 }
 const CollectCard: React.FC<PostCardProps> = props => {
   let {item} = props;
-
+  const navigation = useNavigation();
   const postId = item.postId._id;
   const {desc, imageUrl, time} = item.postId;
   const userId = item.postId.userId._id;
@@ -115,9 +115,7 @@ const CollectCard: React.FC<PostCardProps> = props => {
     <View style={cardStyle.wrap}>
       <TouchableOpacity
         style={{flex: 1}}
-        onPress={() => {
-          // Alert.alert('a');
-        }}>
+        onPress={() => navigation.navigate('detail', {postId: postId})}>
         <View style={{flex: 1}}>
           <Swiper
             // style={cardStyle.wrap}

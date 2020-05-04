@@ -21,6 +21,8 @@ import formatDate from '../../common/formatDate';
 import {NavigationProp} from '@react-navigation/native';
 import ImageList from '../../components/ImageList';
 import ReplyCard from './ReplyCard';
+import ListEmptyComponent from '../../components/ListEmptyComponent';
+import ReplyDialog from '../../components/ReplyDialog';
 interface Props {
   navigation: NavigationProp<any>;
   route: any;
@@ -37,7 +39,9 @@ const Detail: React.FC<Props> = props => {
   const [postData, setPostData] = useState<any>();
   const [error, setError] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
-  const [replyList, setReplyList] = useState<any[]>([])
+  const [replyList, setReplyList] = useState<any[]>([]);
+  const [dialogVisible, setDialogVisible] = useState(false);
+  const [replyIndex, setReplyIndex] = useState(0);
   const collectionList = useSelector(
     (state: any) => state.collect.collectionList,
   );
@@ -51,9 +55,6 @@ const Detail: React.FC<Props> = props => {
     let data = await get(api.GET_POSTBYID + '?postId=' + postId);
     let likeData = await get(api.GET_LIKECOUNT + '?postId=' + postId);
     let likeList = await get(api.GET_LIKELIST + '?postId=' + postId);
-    let replyData = await get(api.GET_REPLYLIST + `?postId=${postId}`);
-    console.log(likeList);
-
     if (data.code === 0) {
       setPostData(data.data);
       setError(false);
@@ -66,8 +67,16 @@ const Detail: React.FC<Props> = props => {
     } else {
       setLikeCount(0);
     }
-    if(replyData.code===0){
-      setReplyList(replyData.data.data)
+  }
+  /**获取评论数据 */
+  useEffect(() => {
+    getReplyData(route.params.postId);
+  }, [route.params.postId, replyIndex]);
+
+  async function getReplyData(postId: string) {
+    let replyData = await get(api.GET_REPLYLIST + `?postId=${postId}`);
+    if (replyData.code === 0) {
+      setReplyList(replyData.data.data);
     }
   }
   useEffect(() => {
@@ -141,6 +150,17 @@ const Detail: React.FC<Props> = props => {
       ) : (
         <ScrollView>
           <View style={HomeStyle.cardWrap}>
+            <ReplyDialog
+              onClose={() => setDialogVisible(false)}
+              visible={dialogVisible}
+              postId={route.params.postId}
+              userId={userInfo._id}
+              onBack={(status:boolean)=>{
+                if(status){
+                  setReplyIndex(replyIndex+1)
+                }
+              }}
+            />
             <>
               <View style={HomeStyle.cardHeader}>
                 <TouchableOpacity
@@ -208,7 +228,7 @@ const Detail: React.FC<Props> = props => {
                   </TouchableOpacity>
                   <TouchableOpacity
                     onPress={() => {
-                      Alert.alert('是否评论xx？');
+                      setDialogVisible(true);
                     }}>
                     <Image style={HomeStyle.cardIcon} source={icons.say} />
                   </TouchableOpacity>
@@ -243,10 +263,7 @@ const Detail: React.FC<Props> = props => {
                       uri: userInfo && userInfo.icon ? userInfo.icon : '',
                     }}
                   />
-                  <TouchableOpacity
-                    onPress={() =>
-                      ToastAndroid.show(userInfo ? userInfo._id : '', 500)
-                    }>
+                  <TouchableOpacity onPress={() => setDialogVisible(true)}>
                     <Text style={HomeStyle.addReply}>添加评论...</Text>
                   </TouchableOpacity>
                 </View>
@@ -264,13 +281,17 @@ const Detail: React.FC<Props> = props => {
               }}>
               所有评论
             </Text>
-            <View>
-              {
-                replyList.map((item:any,index:number)=>{
-              return <ReplyCard item={item} key={''+index}/>
-                })
-              }
-            </View>
+            {replyList && replyList.length > 0 ? (
+              <View>
+                <View>
+                  {replyList.map((item: any, index: number) => {
+                    return <ReplyCard item={item} key={'' + index} />;
+                  })}
+                </View>
+              </View>
+            ) : (
+              <ListEmptyComponent />
+            )}
           </View>
         </ScrollView>
       )}

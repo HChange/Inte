@@ -17,6 +17,7 @@ import Loading from './pages/common/loading';
 import EditPost from './pages/EditPost';
 import Collect from './pages/Collect'
 import Detail from './pages/detail/Detail'
+import User from './pages/user/User'
 //转载导航的容器
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -212,6 +213,7 @@ function Navigator() {
                   <Stack.Screen name="direct" component={Setting} />
                   <Stack.Screen name="upload" component={Setting} />
                   <Stack.Screen name="detail" component={Detail} />
+                  <Stack.Screen name="user" component={User} />
                 </>
               ) : (
                 <Stack.Screen name="login">

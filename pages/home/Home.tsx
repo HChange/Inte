@@ -61,8 +61,7 @@ const Home: React.FC<any> = props => {
         pageNum,
         userId: myFollowId,
       });
-      console.log(result);
-      
+
       return result;
     } catch (error) {
       ToastAndroid.show(error.message, 1000);
@@ -97,7 +96,7 @@ const Home: React.FC<any> = props => {
           Render={HomeCard}
           ListHeaderComponent={ListHeaderComponent}
           request={requestData}
-          pageSize={10}
+          pageSize={6}
           {...props}
         />
       </View>
