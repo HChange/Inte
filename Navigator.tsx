@@ -212,8 +212,8 @@ function Navigator() {
                   </Stack.Screen>
                   <Stack.Screen name="direct" component={Setting} />
                   <Stack.Screen name="upload" component={Setting} />
-                  <Stack.Screen name="detail" component={Detail} />
                   <Stack.Screen name="user" component={User} />
+                  <Stack.Screen name="detail" component={Detail} />
                 </>
               ) : (
                 <Stack.Screen name="login">

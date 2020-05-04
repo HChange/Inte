@@ -41,17 +41,17 @@ const Search = () => {
         <Tab.Navigator>
           <Tab.Screen
             options={{title: '帖子名'}}
-            name="post"
+            name="postList"
             component={PostList}
           />
           <Tab.Screen
             options={{title: '用户名'}}
-            name="user"
+            name="userList"
             component={UserList}
           />
           <Tab.Screen
             options={{title: '手机号'}}
-            name="telephone"
+            name="telephoneList"
             component={TelephoneList}
           />
         </Tab.Navigator>

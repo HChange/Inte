@@ -5,9 +5,10 @@ import {
   StyleSheet,
   Image,
   ImageBackground,
+  TouchableOpacity,
 } from 'react-native';
 import {useSelector} from 'react-redux';
-import {NavigationProp} from '@react-navigation/native';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {get} from '../../common/useRequest';
 import api from '../../config/api';
 import iconMap from '../../assets';
@@ -24,6 +25,8 @@ const TelephoneList: React.FC<Props> = props => {
   const keyword = useSelector((state: any) => state.keyword.keyword);
   const [empty, setEmpty] = useState<boolean>(true);
   const [cardData, setCardData] = useState<any>();
+  const userInfo = useSelector((state: any) => state.user.userInfo);
+  const navigation = useNavigation();
   const request = () => {
     return get(api.FIND_USER + `?keyword=${keyword}&type=telephone`);
   };
@@ -78,30 +81,40 @@ const TelephoneList: React.FC<Props> = props => {
   });
   return (
     <>
-      {empty || !cardData? (
+      {empty || !cardData ? (
         <ListEmptyComponent />
       ) : (
-        <ImageBackground source={{uri: cardData.icon}} style={cardStyle.bg}>
-          <View style={cardStyle.wrap}>
-            <Image style={cardStyle.headIcon} source={{uri: cardData.icon}} />
+        <TouchableOpacity
+          onPress={() => {
+            if (cardData._id === userInfo._id) {
+              navigation.navigate('userTab');
+            } else {
+              // navigation.navigate('detail', {postId: item._id})
+              navigation.navigate('user', {userId: cardData._id});
+            }
+          }}>
+          <ImageBackground source={{uri: cardData.icon}} style={cardStyle.bg}>
+            <View style={cardStyle.wrap}>
+              <Image style={cardStyle.headIcon} source={{uri: cardData.icon}} />
 
-            <View style={cardStyle.uni}>
-              <Text style={cardStyle.username}>{cardData.username}</Text>
-              <Image
-                style={cardStyle.sex}
-                source={cardData.sex === '男' ? iconMap.boy : iconMap.girl}
-              />
+              <View style={cardStyle.uni}>
+                <Text style={cardStyle.username}>{cardData.username}</Text>
+                <Image
+                  style={cardStyle.sex}
+                  source={cardData.sex === '男' ? iconMap.boy : iconMap.girl}
+                />
+              </View>
+              <Text style={cardStyle.sign}>
+                个性签名：
+                {cardData.sign
+                  ? cardData.sign
+                  : cardData.sex === '男'
+                  ? '他很神秘什么都没留下...'
+                  : '她很神秘什么都没留下...'}
+              </Text>
             </View>
-            <Text style={cardStyle.sign}>
-              个性签名：
-              {cardData.sign
-                ? cardData.sign
-                : cardData.sex === '男'
-                ? '他很神秘什么都没留下...'
-                : '她很神秘什么都没留下...'}
-            </Text>
-          </View>
-        </ImageBackground>
+          </ImageBackground>
+        </TouchableOpacity>
       )}
     </>
   );

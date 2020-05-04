@@ -8,9 +8,10 @@ import {
   Alert,
   TouchableHighlightBase,
   ImageBackground,
+  TouchableOpacity,
 } from 'react-native';
 import {useSelector} from 'react-redux';
-import {NavigationProp} from '@react-navigation/native';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 import ImageList from '../../components/ImageList';
 import {get} from '../../common/useRequest';
 import api from '../../config/api';
@@ -30,8 +31,10 @@ interface UserCardProps {
 }
 const UserCard: React.FC<UserCardProps> = props => {
   let {item} = props;
-  const userId = item.userId;
+  const userId = item._id;
   const {icon, username, sex, sign} = item;
+  const userInfo = useSelector((state: any) => state.user.userInfo);
+   const navigation = useNavigation();
   const cardStyle = StyleSheet.create({
     bg: {
       width: '100%',
@@ -71,29 +74,38 @@ const UserCard: React.FC<UserCardProps> = props => {
     },
   });
   return (
-    <ImageBackground source={{uri:icon}} style={cardStyle.bg}>
+    <TouchableOpacity
+      onPress={() => {
 
-    <View key={userId} style={cardStyle.wrap}>
-      <Image style={cardStyle.headIcon} source={{uri: icon}} />
+        if (userId === userInfo._id) {
+          navigation.navigate('userTab');
+        } else {
+          // navigation.navigate('detail', {postId: item._id})
+          navigation.navigate('user', {userId: userId});
+        }
+      }}>
+      <ImageBackground source={{uri: icon}} style={cardStyle.bg}>
+        <View key={userId} style={cardStyle.wrap}>
+          <Image style={cardStyle.headIcon} source={{uri: icon}} />
 
-        <View style={cardStyle.uni}>
-          <Text style={cardStyle.username}>{username}</Text>
-          <Image
-            style={cardStyle.sex}
-            source={sex === '男' ? iconMap.boy : iconMap.girl}
-          />
+          <View style={cardStyle.uni}>
+            <Text style={cardStyle.username}>{username}</Text>
+            <Image
+              style={cardStyle.sex}
+              source={sex === '男' ? iconMap.boy : iconMap.girl}
+            />
+          </View>
+          <Text style={cardStyle.sign}>
+            个性签名：
+            {sign
+              ? sign
+              : sex === '男'
+              ? '他很神秘什么都没留下...'
+              : '她很神秘什么都没留下...'}
+          </Text>
         </View>
-        <Text style={cardStyle.sign}>
-          个性签名：
-          {sign
-            ? sign
-            : sex === '男'
-            ? '他很神秘什么都没留下...'
-            : '她很神秘什么都没留下...'}
-        </Text>
-      </View>
-    </ImageBackground>
-   
+      </ImageBackground>
+    </TouchableOpacity>
   );
 };
 const UserList: React.FC<Props> = props => {

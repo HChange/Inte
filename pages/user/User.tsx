@@ -1,12 +1,20 @@
 import React, {useState, useEffect, useCallback} from 'react';
-import {View, Text, Image, ToastAndroid, FlatList, Alert} from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  ToastAndroid,
+  FlatList,
+  Alert,
+  TouchableOpacity,
+} from 'react-native';
 import {Button, TextareaItem} from '@ant-design/react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import api from '../../config/api';
 import styles from './styles';
 import ImageList from '../../components/ImageList';
 import ImageGroup from './ImageGroup';
-import {get} from '../../common/useRequest';
+import {get, post} from '../../common/useRequest';
 
 const User: React.FC<any> = (props: any) => {
   const userId = props.route.params.userId;
@@ -20,6 +28,7 @@ const User: React.FC<any> = (props: any) => {
   const [followCount, setFollowCount] = useState(0);
   const [thisUserInfo, setThisUserInfo] = useState<any>();
   const [myFollowList, setMyFollowList] = useState<any[]>([]);
+  const [isFollow, setIsFollow] = useState(false);
   function formatNum(number: number | string) {
     let tmp;
     if (number >= 100000000) {
@@ -32,13 +41,7 @@ const User: React.FC<any> = (props: any) => {
     return tmp;
   }
 
-  useEffect(() => {
-    if (userId && userInfo) {
-      if (userId === userInfo._id) {
-        props.navigation.navigate('userTab');
-      }
-    }
-  }, [userId, userInfo, props]);
+ 
   async function requestData(pageNum: number, pageSize: number) {
     return get(
       api.GET_USERALLPOST +
@@ -70,22 +73,57 @@ const User: React.FC<any> = (props: any) => {
       let myFollowListRes = await get(
         api.GET_MYFOLLOWLIST + '?myUserId=' + userInfo._id,
       );
-      if (myFollowListRes.code===0){
-        let myFollowIdList = myFollowListRes.data.data.map((item:any)=>{
+      if (myFollowListRes.code === 0) {
+        let myFollowIdList = myFollowListRes.data.data.map((item: any) => {
           return item.userId._id;
         });
         console.log(myFollowIdList);
-        
+
         setMyFollowList(myFollowIdList);
       }
       setMyFollowCount(myFollowCountRes.data);
       setFollowCount(followCountRes.data);
       setPostCount(postCountRes.data);
       setThisUserInfo(thisUserInfoRes.data);
-      
     },
     [api],
   );
+  useEffect(() => {
+    if (myFollowList.length > 0 && userId) {
+      if(myFollowList.indexOf(userId)>=0){
+        setIsFollow(true);
+      }else{
+        setIsFollow(false);
+      }
+      
+    }
+  }, [myFollowList, userId]);
+  async function _followAction() {
+    if(isFollow){
+      //取消关注
+      let result = await post(api.DELETE_FOLLOW,{
+        userId: userId,
+        myUserId:userInfo._id
+      })
+      if(result.code===0){
+        setIsFollow(false)
+        ToastAndroid.show(result.msg,1000);
+      }else{
+        ToastAndroid.show(result.msg, 1000);
+      }
+    }else{
+        let result = await post(api.ADD_FOLLOW, {
+          userId: userId,
+          myUserId: userInfo._id,
+        });
+        if (result.code === 0) {
+          ToastAndroid.show(result.msg, 1000);
+          setIsFollow(true);
+        } else {
+          ToastAndroid.show(result.msg, 1000);
+        }
+    }
+  }
   return (
     <>
       <View style={styles.wrap}>
@@ -93,13 +131,35 @@ const User: React.FC<any> = (props: any) => {
           <Text style={styles.username} numberOfLines={1}>
             {thisUserInfo && thisUserInfo.username}
           </Text>
+          <TouchableOpacity
+            onPress={() => {
+             _followAction();
+            }}>
+            <View
+              style={{
+                paddingLeft: 6,
+                paddingRight: 6,
+                paddingTop: 2,
+                paddingBottom: 2,
+                borderColor: isFollow ? '#ccc' : '#3897f0',
+                borderWidth: 1,
+                borderRadius: 3,
+                backgroundColor: isFollow ? '#ccc' : '#3897f0',
+                marginRight: 5,
+              }}>
+              <Text style={{color: '#f0f0f0', fontSize: 12}}>
+                {isFollow ? '已关注' : '关注+'}
+              </Text>
+            </View>
+          </TouchableOpacity>
         </View>
         <View style={styles.infoCard}>
           <View style={styles.info}>
             <Image
               style={styles.headImg}
               source={{
-                uri: (thisUserInfo && thisUserInfo.icon) ? thisUserInfo.icon : "//",
+                uri:
+                  thisUserInfo && thisUserInfo.icon ? thisUserInfo.icon : '//',
               }}
             />
             <View style={styles.realInfo}>
