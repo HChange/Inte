@@ -15,6 +15,7 @@ import styles from './styles';
 import ImageList from '../../components/ImageList';
 import ImageGroup from './ImageGroup';
 import {get, post} from '../../common/useRequest';
+import { useNavigation } from '@react-navigation/native';
 
 const User: React.FC<any> = (props: any) => {
   const userId = props.route.params.userId;
@@ -29,6 +30,7 @@ const User: React.FC<any> = (props: any) => {
   const [thisUserInfo, setThisUserInfo] = useState<any>();
   const [myFollowList, setMyFollowList] = useState<any[]>([]);
   const [isFollow, setIsFollow] = useState(false);
+  const navigation = useNavigation();
   function formatNum(number: number | string) {
     let tmp;
     if (number >= 100000000) {
@@ -133,7 +135,7 @@ const User: React.FC<any> = (props: any) => {
           </Text>
           <TouchableOpacity
             onPress={() => {
-             _followAction();
+              _followAction();
             }}>
             <View
               style={{
@@ -169,18 +171,31 @@ const User: React.FC<any> = (props: any) => {
                 </Text>
                 <Text style={styles.realText}>帖子</Text>
               </View>
-              <View>
-                <Text style={[styles.num, styles.realText]} numberOfLines={1}>
-                  {formatNum(followCount || 0)}
-                </Text>
-                <Text style={styles.realText}>粉丝</Text>
-              </View>
-              <View>
-                <Text style={[styles.num, styles.realText]} numberOfLines={1}>
-                  {formatNum(myFollowCount || 0)}
-                </Text>
-                <Text style={styles.realText}>已关注</Text>
-              </View>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('follow', {type: 'follow',userId:props.route.params.userId});
+                }}>
+                <View>
+                  <Text style={[styles.num, styles.realText]} numberOfLines={1}>
+                    {formatNum(followCount || 0)}
+                  </Text>
+                  <Text style={styles.realText}>粉丝</Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('follow', {
+                    type: 'myFollow',
+                    userId: props.route.params.userId,
+                  });
+                }}>
+                <View>
+                  <Text style={[styles.num, styles.realText]} numberOfLines={1}>
+                    {formatNum(myFollowCount || 0)}
+                  </Text>
+                  <Text style={styles.realText}>已关注</Text>
+                </View>
+              </TouchableOpacity>
             </View>
           </View>
           <View style={styles.sign}>

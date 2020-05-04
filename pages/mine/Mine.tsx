@@ -10,6 +10,7 @@ import styles from './styles';
 import ImageList from '../../components/ImageList';
 import ImageGroup from './ImageGroup';
 import {get} from '../../common/useRequest';
+import { useNavigation } from '@react-navigation/native';
 
 const Mine: React.FC<any> = (props: any) => {
   const dispatch = useDispatch();
@@ -21,6 +22,7 @@ const Mine: React.FC<any> = (props: any) => {
   const [signTmp, setSignTmp] = useState<any>();
   const [editFouce, setEditFouce] = useState(false);
   const [updateKey, setUpdateKey] = useState(0);
+  const navigation = useNavigation();
   function formatNum(number: number | string) {
     let tmp;
     if (number >= 100000000) {
@@ -140,18 +142,28 @@ const Mine: React.FC<any> = (props: any) => {
                 </Text>
                 <Text style={styles.realText}>帖子</Text>
               </View>
-              <View>
-                <Text style={[styles.num, styles.realText]} numberOfLines={1}>
-                  {formatNum(userData.followCount || 0)}
-                </Text>
-                <Text style={styles.realText}>粉丝</Text>
-              </View>
-              <View>
-                <Text style={[styles.num, styles.realText]} numberOfLines={1}>
-                  {formatNum(userData.myFollowCount || 0)}
-                </Text>
-                <Text style={styles.realText}>已关注</Text>
-              </View>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('follow', {type: 'follow'});
+                }}>
+                <View>
+                  <Text style={[styles.num, styles.realText]} numberOfLines={1}>
+                    {formatNum(userData.followCount || 0)}
+                  </Text>
+                  <Text style={styles.realText}>粉丝</Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('follow', {type: 'myFollow'});
+                }}>
+                <View>
+                  <Text style={[styles.num, styles.realText]} numberOfLines={1}>
+                    {formatNum(userData.myFollowCount || 0)}
+                  </Text>
+                  <Text style={styles.realText}>已关注</Text>
+                </View>
+              </TouchableOpacity>
             </View>
           </View>
           <View style={styles.sign}>

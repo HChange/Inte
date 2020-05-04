@@ -23,6 +23,7 @@ import ImageList from '../../components/ImageList';
 import ReplyCard from './ReplyCard';
 import ListEmptyComponent from '../../components/ListEmptyComponent';
 import ReplyDialog from '../../components/ReplyDialog';
+import Waiting from '../../components/Waiting'
 interface Props {
   navigation: NavigationProp<any>;
   route: any;
@@ -146,7 +147,7 @@ const Detail: React.FC<Props> = props => {
   return (
     <>
       {error || !postData ? (
-        <Text>ERROR</Text>
+        <Waiting />
       ) : (
         <ScrollView>
           <View style={HomeStyle.cardWrap}>
@@ -155,16 +156,24 @@ const Detail: React.FC<Props> = props => {
               visible={dialogVisible}
               postId={route.params.postId}
               userId={userInfo._id}
-              onBack={(status:boolean)=>{
-                if(status){
-                  setReplyIndex(replyIndex+1)
+              onBack={(status: boolean) => {
+                if (status) {
+                  setReplyIndex(replyIndex + 1);
                 }
               }}
             />
             <>
               <View style={HomeStyle.cardHeader}>
                 <TouchableOpacity
-                  onPress={() => ToastAndroid.show(postData.userId._id, 500)}>
+                  onPress={() => {
+                    if (postData.userId._id === userInfo._id) {
+                      navigation.navigate('userTab');
+                    } else {
+                      navigation.navigate('user', {
+                        userId: postData.userId._id,
+                      });
+                    }
+                  }}>
                   <View style={HomeStyle.cardHIcon}>
                     <Image
                       style={HomeStyle.cardHIImg}

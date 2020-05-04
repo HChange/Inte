@@ -1,6 +1,8 @@
 import React from 'react'
-import { View, Text ,Image, StyleSheet} from 'react-native'
+import { View, Text ,Image, StyleSheet, TouchableOpacity} from 'react-native'
 import formatDate from '../../common/formatDate';
+import { useSelector } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
 interface Props{
     item:ReplyCardData
 }
@@ -18,9 +20,22 @@ interface ReplyCardData{
 }
 const ReplyCard:React.FC<Props> = (props) => {
     let {item} = props;
+    const userInfo = useSelector((state: any) => state.user.userInfo);
+    const navigation = useNavigation();
     return (
       <View style={styles.wrap}>
-        <Image style={styles.icon} source={{uri: item.userId.icon}} />
+        <TouchableOpacity
+          onPress={() => {
+            if (item.userId._id === userInfo._id) {
+              navigation.navigate('userTab');
+            } else {
+              navigation.navigate('user', {
+                userId: item.userId._id,
+              });
+            }
+          }}>
+          <Image style={styles.icon} source={{uri: item.userId.icon}} />
+        </TouchableOpacity>
         <View style={styles.info}>
           <View style={styles.box}>
             <Text style={styles.username}>{item.userId.username}:</Text>
