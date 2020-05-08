@@ -35,23 +35,28 @@ const Home: React.FC<any> = props => {
   }, [userInfo]);
   async function init() {
     let myLikeList = await get(api.GET_MYLIKELIST + '?userId=' + userInfo._id);
-    let myLikeListId = myLikeList.data.data.map((item: any) => {
-      return item.postId._id;
-    });
-    dispatch({type: 'addLike', value: myLikeListId});
+    if (myLikeList && myLikeList.code === 0) {
+      let myLikeListId = myLikeList.data.data.map((item: any) => {
+        return item.postId._id;
+      });
+      dispatch({type: 'addLike', value: myLikeListId});
+    }
     let collectionList = await get(
       api.GET_COLLECTIONLIST + '?userId=' + userInfo._id,
     );
-    let collectionListId = collectionList.data.data.map((item: any) => {
-      return item.postId._id;
-    });
-    dispatch({type: 'addCollection', value: collectionListId});
+    if (collectionList && collectionList.code === 0) {
+      let collectionListId = collectionList.data.data.map((item: any) => {
+        return item.postId._id;
+      });
+      dispatch({type: 'addCollection', value: collectionListId});
+    }
   }
   async function requestData(pageNum: number, pageSize: number) {
     try {
       let myFollow = await get(
         api.GET_MYFOLLOWLIST + '?myUserId=' + userInfo._id,
       );
+      if(!myFollow||myFollow.code!==0) return;
       let myFollowId = myFollow.data.data.map((item: any) => {
         return item.userId._id;
       });

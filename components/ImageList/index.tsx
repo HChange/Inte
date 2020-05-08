@@ -43,19 +43,23 @@ const ImageList: React.FC<Props> = props => {
     setCanLoadMore(false);
     setTimeout(async () => {
       let newData = await request(pageNum, pageSize);
-      if(newData.code!==0){
-        ToastAndroid.show(newData.msg,1000);
+      if (!newData || newData.code !== 0) {
+        if (!newData) {
+          ToastAndroid.show('服务器异常', 1000);
+        } else {
+          ToastAndroid.show(newData.msg, 1000);
+        }
         setNotMore(true);
         setRefreshing(false);
         setCount(0);
         return;
-      }else{
-        if(!newData.data||!newData.data.count||!newData.data.count){
+      } else {
+        if (!newData.data || !newData.data.count || !newData.data.count) {
           setNotMore(true);
           setRefreshing(false);
           setCount(0);
-        }else{
-           setCount(newData.data.count);
+        } else {
+          setCount(newData.data.count);
         }
       }
       let postData = newData.data.data;
@@ -110,7 +114,7 @@ const ImageList: React.FC<Props> = props => {
           return <Render item={item} />;
         }}
         keyExtractor={_item => {
-          return _item[0] ? _item[0]._id :( _item._id?_item._id:'1');
+          return _item[0] ? _item[0]._id : _item._id ? _item._id : '1';
         }}
         onEndReached={() => {
           if (canLoadMore) {

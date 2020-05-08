@@ -78,7 +78,7 @@ const Login = (props: Props) => {
       setLoading(false);
       setDisabled(false);
 
-      toast.current.alertWithType('error', '失败', error);
+      toast.current.alertWithType('error', '失败', error.message);
     }
 
   }, [telephone,password,props]);

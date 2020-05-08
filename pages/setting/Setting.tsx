@@ -41,7 +41,6 @@ const Setting = function(props: any) {
     <>
       <View style={styles.wrap}>
         <Loading loadingVisible={loadingVisible} text="正在退出，请稍后..." />
-        <Text>setting</Text>
         <Button type="primary" onPress={logoutAction}>
           退出登录
         </Button>

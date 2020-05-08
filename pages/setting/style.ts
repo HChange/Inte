@@ -16,6 +16,6 @@ export default StyleSheet.create({
   wrap:{
     position:'relative',
     flex:1,
-    backgroundColor:'red'
+    justifyContent:'flex-end'
   }
 });

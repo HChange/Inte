@@ -1,4 +1,4 @@
-const ADDRESS = 'http://www.hellochange.cn:8088';
+const ADDRESS = 'https://www.hellochange.top';
 export default {
   /**请求地址 */
   ADDRESS: ADDRESS,
